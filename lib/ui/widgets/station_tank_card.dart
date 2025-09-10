@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class StationTankCard extends StatefulWidget {
   final String title;
@@ -40,18 +41,18 @@ class _StationTankCardState extends State<StationTankCard> {
   Widget build(BuildContext context) {
     final status = _calculateStatus();
 
-    // 🎨 لون الأعمدة حسب الحالة
+    // 🎨 dynamic bar color
     final Color barColor = status == "Filling"
         ? Colors.green
         : status == "Draining"
-        ? Colors.orange
+        ? Colors.red
         : Colors.grey;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(24.0.r),
       decoration: BoxDecoration(
         color: const Color(0xFF1c1c1c),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(24.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +61,7 @@ class _StationTankCardState extends State<StationTankCard> {
           Row(
             children: [
               CircleAvatar(
-                radius: 12,
+                radius: 16.r,
                 backgroundColor: barColor.withAlpha(25),
                 child: Icon(
                   status == "Filling"
@@ -69,15 +70,15 @@ class _StationTankCardState extends State<StationTankCard> {
                       ? Icons.arrow_downward
                       : Icons.pause,
                   color: barColor,
-                  size: 16,
+                  size: 16.sp,
                 ),
               ),
-              const SizedBox(width: 8),
+              SizedBox(width: 8.w),
               Text(
                 widget.title,
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -86,14 +87,14 @@ class _StationTankCardState extends State<StationTankCard> {
                 status,
                 style: TextStyle(
                   color: barColor,
-                  fontSize: 16,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 16),
+          SizedBox(height: 20.h),
 
           // --- Flow + Levels + Capacity ---
           Row(
@@ -102,16 +103,16 @@ class _StationTankCardState extends State<StationTankCard> {
               // Flow
               Column(
                 children: [
-                  const Text(
+                  Text(
                     "Flow",
-                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                    style: TextStyle(color: Colors.grey, fontSize: 20.sp),
                   ),
                   Text(
                     "${widget.flow.toStringAsFixed(2)} L/S",
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 20.sp,
                     ),
                   ),
                 ],
@@ -123,15 +124,15 @@ class _StationTankCardState extends State<StationTankCard> {
                   Row(
                     children: [
                       _buildLevel("Lv1", widget.levels[0]),
-                      const SizedBox(width: 20),
+                      SizedBox(width: 20.w),
                       _buildLevel("Lv2", widget.levels[1]),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8.h),
                   Row(
                     children: [
                       _buildLevel("Lv3", widget.levels[2]),
-                      const SizedBox(width: 20),
+                      SizedBox(width: 20.w),
                       _buildLevel("Lv4", widget.levels[3]),
                     ],
                   ),
@@ -141,16 +142,16 @@ class _StationTankCardState extends State<StationTankCard> {
               // Capacity
               Column(
                 children: [
-                  const Text(
+                  Text(
                     "Capacity",
-                    style: TextStyle(color: Colors.grey, fontSize: 14),
+                    style: TextStyle(color: Colors.grey, fontSize: 20.sp),
                   ),
                   Text(
                     "${widget.capacity} M",
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 20.sp,
                     ),
                   ),
                 ],
@@ -158,63 +159,68 @@ class _StationTankCardState extends State<StationTankCard> {
             ],
           ),
 
-          const SizedBox(height: 32),
+          SizedBox(height: 40.h),
 
           // --- Bars ---
           SizedBox(
-            height: 200,
+            height: 240.h,
             child: Stack(
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(
-                    4,
-                    (_) => Divider(
-                      thickness: 0.5,
-                      color: Colors.white.withAlpha(50),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: List.generate(
+                      4,
+                      (_) => Divider(
+                        thickness: 0.5,
+                        color: Colors.white.withAlpha(50),
+                      ),
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 48,
-                  children: widget.levels.map((level) {
-                    final percent = (level / widget.capacity) * 100;
-                    return Container(
-                      width: 130,
-                      height: 200,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
-                        color: Colors.white.withAlpha(15),
-                        border: Border.all(color: Colors.grey.shade700),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Stack(
-                        children: [
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              height: (level / widget.capacity) * 200,
-                              width: double.infinity,
-                              color: barColor, // 🎨 dynamic color
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Text(
-                              "${percent.toStringAsFixed(2)}%",
-                              style: TextStyle(
-                                color: level == widget.capacity
-                                    ? Colors.white
-                                    : Colors.white70,
-                                fontWeight: FontWeight.w600,
+                Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: widget.levels.map((level) {
+                      final percent = (level / widget.capacity) * 100;
+                      return Container(
+                        width: 140.w,
+                        height: 220.h,
+                        margin: EdgeInsets.symmetric(horizontal: 24.w),
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withAlpha(15),
+                          border: Border.all(color: Colors.grey.shade700),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Stack(
+                          children: [
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                height: (level / widget.capacity) * 200.h,
+                                width: double.infinity,
+                                color: barColor,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                            Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                "${percent.toStringAsFixed(2)}%",
+                                style: TextStyle(
+                                  color: level == widget.capacity
+                                      ? Colors.white
+                                      : Colors.white70,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.sp,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ],
             ),
@@ -227,12 +233,16 @@ class _StationTankCardState extends State<StationTankCard> {
   Widget _buildLevel(String label, double value) {
     return Column(
       children: [
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 12)),
         Text(
-          "${value.toStringAsFixed(2)} M",
-          style: const TextStyle(
+          label,
+          style: TextStyle(color: Colors.grey, fontSize: 20.sp),
+        ),
+        Text(
+          "${value.toStringAsFixed(3)} M",
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
+            fontSize: 20.sp,
           ),
         ),
       ],

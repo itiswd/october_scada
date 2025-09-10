@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:october_scada/services/mqtt_service.dart';
 import 'package:october_scada/ui/widgets/station_tank_card.dart';
 import 'package:october_scada/ui/widgets/wave_tank.dart';
 import 'package:october_scada/ui/widgets/weather.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../state/mqtt_controller.dart';
 
@@ -13,33 +14,49 @@ class DashboardPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final service = ref.watch(mqttProvider);
+    final bool isConnected = service.connected;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 251, 250, 251),
+      backgroundColor: const Color.fromARGB(255, 251, 250, 251),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // breakpoints
+          bool isMobile = constraints.maxWidth < 600.w;
+          bool isDesktop = constraints.maxWidth >= 1100.w;
 
-      body: service.connected
-          ? SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //Waved tank
-                    WaveTank(height: 48, waveAmplitude: 6.0, waveSpeed: 1.0),
-                    //Valves and Pumps
-                    Row(
-                      children: [
-                        Spacer(flex: 1),
-                        SizedBox(
-                          // color: Colors.white,
-                          width: 950,
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(12.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// Connection Status
+                  if (!isConnected) const ConnectionStatusIndicator(),
+
+                  /// Wave Tank
+                  Center(
+                    child: WaveTank(
+                      height: isMobile ? 32.h : 56.h,
+                      waveAmplitude: 6.0,
+                      waveSpeed: 1.0,
+                    ),
+                  ),
+
+                  /// Main content
+                  Flex(
+                    direction: isMobile ? Axis.vertical : Axis.horizontal,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// Pumps + Tank
+                      Expanded(
+                        flex: isDesktop ? 3 : 1,
+                        child: Column(
+                          children: [
+                            /// Pumps Row
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
                                 children: [
-                                  //Stage 1
                                   PumpColumn(
                                     startOn:
                                         service.inputs['IN_20_V1_O'] ?? false,
@@ -56,7 +73,7 @@ class DashboardPage extends ConsumerWidget {
                                     pumpOn: 'assets/images/pump_on.gif',
                                     pumpOff: 'assets/images/pump_off.png',
                                   ),
-                                  //Stage 2
+                                  SizedBox(width: 12.w),
                                   PumpColumn(
                                     startOn:
                                         service.inputs['IN_28_V3_O'] ?? false,
@@ -72,7 +89,8 @@ class DashboardPage extends ConsumerWidget {
                                     valveNull: 'assets/images/valve_null.png',
                                     pumpOn: 'assets/images/pump_on.gif',
                                     pumpOff: 'assets/images/pump_off.png',
-                                  ), //Stage 3
+                                  ),
+                                  SizedBox(width: 12.w),
                                   PumpColumn(
                                     startOn:
                                         service.inputs['IN_36_V5_O'] ?? false,
@@ -89,7 +107,7 @@ class DashboardPage extends ConsumerWidget {
                                     pumpOn: 'assets/images/pump_on.gif',
                                     pumpOff: 'assets/images/pump_off.png',
                                   ),
-                                  //Stage 4
+                                  SizedBox(width: 12.w),
                                   PumpColumn(
                                     startOn:
                                         service.inputs['IN_44_V7_O'] ?? false,
@@ -103,7 +121,8 @@ class DashboardPage extends ConsumerWidget {
                                     valveNull: 'assets/images/valve_null.png',
                                     pumpOn: 'assets/images/pump_on.gif',
                                     pumpOff: 'assets/images/pump_off.png',
-                                  ), //Stage 5
+                                  ),
+                                  SizedBox(width: 12.w),
                                   PumpColumn(
                                     startOn: service.inputs[''] ?? false,
                                     startOff: service.inputs[''] ?? false,
@@ -115,7 +134,8 @@ class DashboardPage extends ConsumerWidget {
                                     valveNull: 'assets/images/valve_null.png',
                                     pumpOn: 'assets/images/pump_on.gif',
                                     pumpOff: 'assets/images/pump_off.png',
-                                  ), //Stage 6
+                                  ),
+                                  SizedBox(width: 12.w),
                                   PumpColumn(
                                     startOn:
                                         service.inputs['IN_60_V11_O'] ?? false,
@@ -131,80 +151,46 @@ class DashboardPage extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                              StationTankCard(
-                                title: "Station 1 Tank",
-                                flow:
-                                    service
-                                        .holdingRegisters['ANLOG_IN6_FLOW'] ??
-                                    0,
-                                capacity: 7.8,
-                                levels: [
-                                  service.holdingRegisters['ANLOG_IN1_LVL1'] ??
-                                      0,
-                                  service.holdingRegisters['ANLOG_IN2_LVL2_WITH_LVL4'] ??
-                                      0,
-                                  service.holdingRegisters['ANLOG_IN3_LVL3'] ??
-                                      0,
-                                  service.holdingRegisters['ANLOG_IN2_LVL2_WITH_LVL4'] ??
-                                      0,
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Spacer(flex: 3),
-                        Column(
-                          children: [
-                            //Generators and Transformers
-                            Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 25, 25, 25),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(32),
-                                child: Center(
-                                  child: Row(
-                                    spacing: 32,
-                                    children: [
-                                      TransWidget(
-                                        title: 'Generator',
-                                        value: service.inputs['IN_7_GEN1_W2'],
-                                        imageOn:
-                                            'assets/images/generator_off.png',
-
-                                        imageOff:
-                                            'assets/images/generator_off.png',
-                                        imageNull:
-                                            'assets/images/generator_null.png',
-                                      ),
-                                      TransWidget(
-                                        title: 'Transformer 1',
-                                        value: service.inputs['IN_1_TR1_W2'],
-                                        imageOn:
-                                            'assets/images/transformer_on.png',
-                                        imageOff:
-                                            'assets/images/transformer_off.png',
-                                        imageNull:
-                                            'assets/images/transformer_null.png',
-                                      ),
-                                      TransWidget(
-                                        title: 'Transformer 2',
-                                        value: service.inputs['IN_4_TR2_W2'],
-
-                                        imageOn:
-                                            'assets/images/transformer_off.png',
-                                        imageOff:
-                                            'assets/images/transformer_on.png',
-                                        imageNull:
-                                            'assets/images/transformer_null.png',
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
                             ),
+
+                            /// Station Tank
+                            StationTankCard(
+                              title: "Station 1 Tank",
+                              flow:
+                                  service.holdingRegisters['ANLOG_IN6_FLOW'] ??
+                                  0,
+                              capacity: 7.8,
+                              levels: [
+                                service.holdingRegisters['ANLOG_IN1_LVL1'] ?? 0,
+                                service.holdingRegisters['ANLOG_IN2_LVL2_WITH_LVL4'] ??
+                                    0,
+                                service.holdingRegisters['ANLOG_IN3_LVL3'] ?? 0,
+                                service.holdingRegisters['ANLOG_IN2_LVL2_WITH_LVL4'] ??
+                                    0,
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      SizedBox(
+                        width: isMobile ? 0 : 24.w,
+                        height: isMobile ? 24.h : 0,
+                      ),
+
+                      /// Generators + Weather
+                      Expanded(
+                        flex: isDesktop ? 2 : 1,
+                        child: Column(
+                          children: [
+                            SizedBox(height: isDesktop ? 12.h : 0),
+
+                            /// Transformers and Generators
+                            Transformers(isMobile: isMobile, service: service),
+
+                            SizedBox(height: 12.h),
+
+                            /// Weather and Gauges
                             WeatherAndGaugesWidget(
                               ls:
                                   service.holdingRegisters['ANLOG_IN6_FLOW'] ??
@@ -216,37 +202,101 @@ class DashboardPage extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        Spacer(flex: 4),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            )
-          : _buildShimmerLoader(),
+            ),
+          );
+        },
+      ),
     );
   }
+}
 
-  Widget _buildShimmerLoader() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey.shade900,
-      highlightColor: Colors.grey.shade700,
+class Transformers extends StatelessWidget {
+  const Transformers({
+    super.key,
+    required this.isMobile,
+    required this.service,
+  });
+
+  final bool isMobile;
+  final MqttService service;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: isMobile ? 160.h : 260.h,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 25, 25, 25),
+        borderRadius: BorderRadius.circular(24.r),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
+        padding: EdgeInsets.all(20.w),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Container(
-              width: double.infinity,
-              height: 30,
-              color: Colors.grey.shade800,
+            TransWidget(
+              title: 'Generator',
+              value: service.inputs['IN_7_GEN1_W2'],
+              imageOn: 'assets/images/generator_off.png',
+              imageOff: 'assets/images/generator_off.png',
+              imageNull: 'assets/images/generator_null.png',
             ),
-            const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              height: 200,
-              color: Colors.grey.shade800,
+            TransWidget(
+              title: 'Transformer 1',
+              value: service.inputs['IN_1_TR1_W2'],
+              imageOn: 'assets/images/transformer_on.png',
+              imageOff: 'assets/images/transformer_off.png',
+              imageNull: 'assets/images/transformer_null.png',
+            ),
+            TransWidget(
+              title: 'Transformer 2',
+              value: service.inputs['IN_4_TR2_W2'],
+              imageOn: 'assets/images/transformer_off.png',
+              imageOff: 'assets/images/transformer_on.png',
+              imageNull: 'assets/images/transformer_null.png',
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class ConnectionStatusIndicator extends StatelessWidget {
+  const ConnectionStatusIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 12.h),
+      child: Container(
+        color: Colors.red.withAlpha(60),
+        child: Padding(
+          padding: EdgeInsets.all(4.0.r),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/images/server-down.png',
+                width: 40.w,
+                height: 40.w,
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                "Offline",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 28.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -289,21 +339,21 @@ class PumpColumn extends StatelessWidget {
               : startOff
               ? valveOff
               : valveNull,
-          width: 80,
+          width: 110.w,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Image.asset(pump ? pumpOn : pumpOff, width: 120),
+          padding: EdgeInsets.only(left: 17.w),
+          child: Image.asset(pump ? pumpOn : pumpOff, width: 150.w),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 52),
+          padding: EdgeInsets.only(left: 64.w),
           child: Image.asset(
             endOn
                 ? valveOn
                 : endOff
                 ? valveOff
                 : valveNull,
-            width: 80,
+            width: 110.w,
           ),
         ),
       ],
@@ -312,7 +362,7 @@ class PumpColumn extends StatelessWidget {
 }
 
 class TransWidget extends StatelessWidget {
-  final bool? value; // ✅ خليها nullable
+  final bool? value;
   final String imageOn;
   final String imageOff;
   final String imageNull;
@@ -329,7 +379,6 @@ class TransWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ نحدد الصورة حسب الحالة
     String image;
     String statusText;
     Color statusColor;
@@ -349,18 +398,16 @@ class TransWidget extends StatelessWidget {
     }
 
     return SizedBox(
-      width: 120,
-      height: 140,
+      height: 140.h,
       child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(image, width: 80),
+            Image.asset(image, width: 80.w),
             Text(
               "$title\n$statusText",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: FontWeight.w700,
                 color: statusColor,
               ),
