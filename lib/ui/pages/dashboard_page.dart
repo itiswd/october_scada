@@ -15,7 +15,6 @@ class DashboardPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final service = ref.watch(mqttProvider);
     final bool isConnected = service.connected;
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 251, 250, 251),
       body: LayoutBuilder(
@@ -23,7 +22,6 @@ class DashboardPage extends ConsumerWidget {
           // breakpoints
           bool isMobile = constraints.maxWidth < 600.w;
           bool isDesktop = constraints.maxWidth >= 1100.w;
-
           return SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.all(12.w),
@@ -49,7 +47,7 @@ class DashboardPage extends ConsumerWidget {
                     children: [
                       /// Pumps + Tank
                       Expanded(
-                        flex: isDesktop ? 3 : 1,
+                        flex: isDesktop ? 5 : 1,
                         child: Column(
                           children: [
                             /// Pumps Row
@@ -172,7 +170,6 @@ class DashboardPage extends ConsumerWidget {
                           ],
                         ),
                       ),
-
                       SizedBox(
                         width: isMobile ? 0 : 24.w,
                         height: isMobile ? 24.h : 0,
@@ -187,8 +184,7 @@ class DashboardPage extends ConsumerWidget {
 
                             /// Transformers and Generators
                             Transformers(isMobile: isMobile, service: service),
-
-                            SizedBox(height: 12.h),
+                            SizedBox(height: 1.h),
 
                             /// Weather and Gauges
                             WeatherAndGaugesWidget(
@@ -229,10 +225,10 @@ class Transformers extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: isMobile ? 160.h : 260.h,
+      height: isMobile ? 160.h : 300.h,
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 25, 25, 25),
-        borderRadius: BorderRadius.circular(24.r),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
       ),
       child: Padding(
         padding: EdgeInsets.all(20.w),
@@ -242,23 +238,23 @@ class Transformers extends StatelessWidget {
             TransWidget(
               title: 'Generator',
               value: service.inputs['IN_7_GEN1_W2'],
-              imageOn: 'assets/images/generator_off.png',
+              imageOn: 'assets/images/generator_on.png',
               imageOff: 'assets/images/generator_off.png',
-              imageNull: 'assets/images/generator_null.png',
+              converted: true,
             ),
             TransWidget(
               title: 'Transformer 1',
               value: service.inputs['IN_1_TR1_W2'],
               imageOn: 'assets/images/transformer_on.png',
               imageOff: 'assets/images/transformer_off.png',
-              imageNull: 'assets/images/transformer_null.png',
+              converted: true,
             ),
             TransWidget(
               title: 'Transformer 2',
               value: service.inputs['IN_4_TR2_W2'],
-              imageOn: 'assets/images/transformer_off.png',
-              imageOff: 'assets/images/transformer_on.png',
-              imageNull: 'assets/images/transformer_null.png',
+              imageOn: 'assets/images/transformer_on.png',
+              imageOff: 'assets/images/transformer_off.png',
+              converted: false,
             ),
           ],
         ),
@@ -339,21 +335,21 @@ class PumpColumn extends StatelessWidget {
               : startOff
               ? valveOff
               : valveNull,
-          width: 110.w,
+          width: 96.w,
         ),
         Padding(
-          padding: EdgeInsets.only(left: 17.w),
-          child: Image.asset(pump ? pumpOn : pumpOff, width: 150.w),
+          padding: EdgeInsets.only(left: 10.w),
+          child: Image.asset(pump ? pumpOn : pumpOff, width: 120.w),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 64.w),
+          padding: EdgeInsets.only(left: 51.w),
           child: Image.asset(
             endOn
                 ? valveOn
                 : endOff
                 ? valveOff
                 : valveNull,
-            width: 110.w,
+            width: 96.w,
           ),
         ),
       ],
@@ -365,8 +361,8 @@ class TransWidget extends StatelessWidget {
   final bool? value;
   final String imageOn;
   final String imageOff;
-  final String imageNull;
   final String title;
+  final bool converted;
 
   const TransWidget({
     super.key,
@@ -374,7 +370,7 @@ class TransWidget extends StatelessWidget {
     required this.imageOn,
     required this.title,
     required this.imageOff,
-    required this.imageNull,
+    required this.converted,
   });
 
   @override
@@ -384,30 +380,27 @@ class TransWidget extends StatelessWidget {
     Color statusColor;
 
     if (value == true) {
-      image = imageOff;
-      statusText = "OFF";
-      statusColor = Colors.red;
-    } else if (value == false) {
-      image = imageOn;
-      statusText = "ON";
-      statusColor = Colors.green;
+      image = converted ? imageOff : imageOn;
+      statusText = converted ? "OFF" : "ON";
+      statusColor = converted ? Colors.red : Colors.green;
     } else {
-      image = imageNull;
-      statusText = "N/A";
-      statusColor = Colors.grey;
+      image = converted ? imageOn : imageOff;
+      statusText = converted ? "ON" : "OFF";
+      statusColor = converted ? Colors.green : Colors.red;
     }
 
     return SizedBox(
-      height: 140.h,
+      height: 180.h,
       child: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(image, width: 80.w),
+            Image.asset(image, width: 96.w),
             Text(
               "$title\n$statusText",
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 16.sp,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w700,
                 color: statusColor,
               ),

@@ -69,11 +69,8 @@ class _WeatherAndGaugesWidgetState extends State<WeatherAndGaugesWidget> {
       children: [
         // Weather row
         Container(
-          height: 200.h,
-          decoration: BoxDecoration(
-            color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(24.r),
-          ),
+          height: 240.h,
+          color: const Color(0xFF1A1A1A),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -104,15 +101,15 @@ class _WeatherAndGaugesWidgetState extends State<WeatherAndGaugesWidget> {
           ),
         ),
 
-        SizedBox(height: 12.h),
+        SizedBox(height: 1.h),
 
         // Gauges
         Container(
-          height: 260.h,
+          height: 300.h,
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
             color: const Color(0xFF1A1A1A),
-            borderRadius: BorderRadius.circular(24.r),
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(40.r)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

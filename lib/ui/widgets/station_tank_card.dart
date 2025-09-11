@@ -163,7 +163,7 @@ class _StationTankCardState extends State<StationTankCard> {
 
           // --- Bars ---
           SizedBox(
-            height: 240.h,
+            height: 300.h,
             child: Stack(
               children: [
                 Center(
@@ -184,8 +184,8 @@ class _StationTankCardState extends State<StationTankCard> {
                     children: widget.levels.map((level) {
                       final percent = (level / widget.capacity) * 100;
                       return Container(
-                        width: 140.w,
-                        height: 220.h,
+                        width: 180.w,
+                        height: 280.h,
                         margin: EdgeInsets.symmetric(horizontal: 24.w),
                         clipBehavior: Clip.antiAlias,
                         decoration: BoxDecoration(

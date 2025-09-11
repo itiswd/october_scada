@@ -14,12 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(1920, 1080), // ✅ مقاس التصميم الأساسي (Desktop)
+      designSize: const Size(1920, 1080),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
-          title: 'October SCADA',
+          title: 'October Stations',
           theme: ThemeData(primarySwatch: Colors.blue),
           debugShowCheckedModeBanner: false,
           home: const DashboardPage(),
