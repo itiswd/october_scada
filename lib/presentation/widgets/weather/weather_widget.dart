@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:october_scada/theme/app_theme.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/utils/responsive_helper.dart';
@@ -72,7 +73,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
 
     return Container(
       height: isMobile ? 100.h : 240.h,
-      color: const Color(0xFF1A1A1A),
+      color: AppTheme.darkerBackground,
       child: isLoading
           ? _buildLoadingState(isMobile)
           : _buildWeatherData(isMobile),

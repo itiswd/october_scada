@@ -106,7 +106,7 @@ class DashboardPage extends ConsumerWidget {
             children: [
               SizedBox(height: isDesktop ? 12.h : 0),
               TransformersSection(service: service),
-              SizedBox(height: 0.2.h),
+              SizedBox(height: 0.5.h),
               WeatherAndGaugesSection(
                 ls: service.holdingRegisters[MqttTopics.flow] ?? 0,
                 bar: service.holdingRegisters[MqttTopics.pressure] ?? 0,

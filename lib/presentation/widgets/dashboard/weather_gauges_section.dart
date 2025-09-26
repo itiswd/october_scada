@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:october_scada/theme/app_theme.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../../core/utils/responsive_helper.dart';
@@ -23,7 +24,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
       children: [
         // Weather Section
         const WeatherWidget(),
-        SizedBox(height: 0.2.h),
+        SizedBox(height: 0.5.h),
         // Gauges Section
         _buildGaugesSection(isMobile),
       ],
@@ -35,7 +36,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
       height: isMobile ? 160.h : 300.h,
       padding: EdgeInsets.all(isMobile ? 12.w : 16.w),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1A),
+        color: AppTheme.darkerBackground,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24.r)),
       ),
       child: isMobile ? _buildMobileGauges() : _buildDesktopGauges(),
