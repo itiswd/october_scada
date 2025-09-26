@@ -32,14 +32,15 @@ class DashboardPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (isMobile) SafeArea(child: SizedBox(height: 16.h)),
               // Connection Status
               if (!isConnected) const ConnectionStatusIndicator(),
 
-              // Wave Tank
+              // Wave Tank - أصغر في الموبايل
               Center(
                 child: WaveTank(
                   height: isMobile ? 40.h : 56.h,
-                  waveAmplitude: 6.0,
+                  waveAmplitude: isMobile ? 4.0 : 6.0,
                   waveSpeed: 1.0,
                 ),
               ),
@@ -62,15 +63,14 @@ class DashboardPage extends ConsumerWidget {
       children: [
         // Pumps Section
         PumpsSection(service: service),
-        SizedBox(height: 16.h),
 
         // Station Tank
         _buildStationTank(service),
-        SizedBox(height: 16.h),
+        SizedBox(height: 8.h),
 
         // Transformers Section
         TransformersSection(service: service),
-        SizedBox(height: 1.h),
+        SizedBox(height: 0.2.h),
 
         // Weather and Gauges
         WeatherAndGaugesSection(

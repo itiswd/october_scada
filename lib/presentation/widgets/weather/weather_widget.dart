@@ -71,7 +71,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
     final isMobile = ResponsiveHelper.isMobile(context);
 
     return Container(
-      height: isMobile ? 160.h : 240.h,
+      height: isMobile ? 100.h : 240.h,
       color: const Color(0xFF1A1A1A),
       child: isLoading
           ? _buildLoadingState(isMobile)
@@ -80,123 +80,83 @@ class _WeatherWidgetState extends State<WeatherWidget> {
   }
 
   Widget _buildLoadingState(bool isMobile) {
-    return const Center(child: CircularProgressIndicator(color: Colors.blue));
-  }
-
-  Widget _buildWeatherData(bool isMobile) {
-    if (isMobile) {
-      return Padding(
-        padding: EdgeInsets.all(16.w),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildWeatherItem(
-                  'assets/images/icon_temp.png',
-                  temperature,
-                  Colors.red,
-                  isMobile,
-                ),
-                _buildWeatherItem(
-                  'assets/images/icon_humidity.png',
-                  humidity,
-                  Colors.blue,
-                  isMobile,
-                ),
-              ],
-            ),
-            SizedBox(height: 12.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildWeatherItem(
-                  'assets/images/icon_sunny.png',
-                  condition,
-                  Colors.orange,
-                  isMobile,
-                ),
-                _buildWeatherItem(
-                  'assets/images/icon_wind.png',
-                  wind,
-                  Colors.blue,
-                  isMobile,
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildWeatherItem(
-            'assets/images/icon_temp.png',
-            temperature,
-            Colors.red,
-            isMobile,
-          ),
-          SizedBox(width: 56.w),
-          _buildWeatherItem(
-            'assets/images/icon_humidity.png',
-            humidity,
-            Colors.blue,
-            isMobile,
-          ),
-          SizedBox(width: 56.w),
-          _buildWeatherItem(
-            'assets/images/icon_sunny.png',
-            condition,
-            Colors.orange,
-            isMobile,
-          ),
-          SizedBox(width: 56.w),
-          _buildWeatherItem(
-            'assets/images/icon_wind.png',
-            wind,
-            Colors.blue,
-            isMobile,
-          ),
-        ],
-      );
-    }
-  }
-
-  Widget _buildWeatherItem(
-    String icon,
-    String value,
-    Color color,
-    bool isMobile,
-  ) {
-    return SizedBox(
-      height: isMobile ? 60.h : 140.h,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            icon,
-            width: isMobile ? 32.w : 56.w,
-            height: isMobile ? 32.h : 56.h,
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.error,
-                size: isMobile ? 32.w : 56.w,
-                color: Colors.grey,
-              );
-            },
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            value,
-            style: TextStyle(
-              color: color,
-              fontSize: isMobile ? 12.sp : 20.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
+    return Center(
+      child: CircularProgressIndicator(
+        color: Colors.blue,
+        strokeWidth: isMobile ? 2.0 : 4.0,
       ),
     );
   }
+
+  Widget _buildWeatherData(bool isMobile) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _buildWeatherItem(
+          'assets/images/icon_temp.png',
+          temperature,
+          Colors.red,
+          isMobile,
+        ),
+        SizedBox(width: 56.w),
+        _buildWeatherItem(
+          'assets/images/icon_humidity.png',
+          humidity,
+          Colors.blue,
+          isMobile,
+        ),
+        SizedBox(width: 56.w),
+        _buildWeatherItem(
+          'assets/images/icon_sunny.png',
+          condition,
+          Colors.orange,
+          isMobile,
+        ),
+        SizedBox(width: 56.w),
+        _buildWeatherItem(
+          'assets/images/icon_wind.png',
+          wind,
+          Colors.blue,
+          isMobile,
+        ),
+      ],
+    );
+  }
+}
+
+Widget _buildWeatherItem(
+  String icon,
+  String value,
+  Color color,
+  bool isMobile,
+) {
+  return SizedBox(
+    height: isMobile ? 64.h : 140.h,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.asset(
+          icon,
+          width: isMobile ? 28.w : 56.w,
+          height: isMobile ? 28.h : 56.h,
+          errorBuilder: (context, error, stackTrace) {
+            return Icon(
+              Icons.error,
+              size: isMobile ? 28.w : 56.w,
+              color: Colors.grey,
+            );
+          },
+        ),
+        SizedBox(height: 4.h),
+        Text(
+          value,
+          style: TextStyle(
+            color: color,
+            fontSize: isMobile ? 12.sp : 20.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    ),
+  );
 }

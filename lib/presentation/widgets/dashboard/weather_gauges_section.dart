@@ -23,9 +23,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
       children: [
         // Weather Section
         const WeatherWidget(),
-
         SizedBox(height: 0.2.h),
-
         // Gauges Section
         _buildGaugesSection(isMobile),
       ],
@@ -34,8 +32,8 @@ class WeatherAndGaugesSection extends StatelessWidget {
 
   Widget _buildGaugesSection(bool isMobile) {
     return Container(
-      height: isMobile ? 200.h : 300.h,
-      padding: EdgeInsets.all(16.w),
+      height: isMobile ? 160.h : 300.h,
+      padding: EdgeInsets.all(isMobile ? 12.w : 16.w),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(40.r)),
@@ -77,8 +75,8 @@ class WeatherAndGaugesSection extends StatelessWidget {
     double percent,
     bool isMobile,
   ) {
-    final radius = isMobile ? 60.r : 88.r;
-    final lineWidth = isMobile ? 16.w : 28.w;
+    final radius = isMobile ? 56.r : 88.r;
+    final lineWidth = isMobile ? 10.w : 28.w;
     final avatarRadius = isMobile ? 48.r : 72.r;
 
     return Stack(
@@ -109,7 +107,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
           value.toStringAsFixed(2),
           style: TextStyle(
             color: Colors.blue,
-            fontSize: isMobile ? 12.sp : 16.sp,
+            fontSize: isMobile ? 6.sp : 16.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -117,7 +115,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
           unit,
           style: TextStyle(
             color: Colors.white70,
-            fontSize: isMobile ? 10.sp : 12.sp,
+            fontSize: isMobile ? 4.sp : 12.sp,
             fontWeight: FontWeight.bold,
           ),
         ),

@@ -17,38 +17,22 @@ class TransformersSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      height: isMobile ? 200.h : 300.h,
+      height: isMobile ? 140.h : 300.h,
       decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
+        color: AppTheme.darkerBackground,
         borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
       ),
       child: Padding(
-        padding: EdgeInsets.all(20.w),
-        child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
-      ),
-    );
-  }
-
-  Widget _buildMobileLayout() {
-    return Column(
-      children: [
-        Row(
+        padding: EdgeInsets.all(isMobile ? 12.w : 20.w),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(child: _buildGenerator()),
             Expanded(child: _buildTransformer1()),
+            Expanded(child: _buildTransformer2()),
           ],
         ),
-        SizedBox(height: 16.h),
-        _buildTransformer2(),
-      ],
-    );
-  }
-
-  Widget _buildDesktopLayout() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [_buildGenerator(), _buildTransformer1(), _buildTransformer2()],
+      ),
     );
   }
 
@@ -64,7 +48,7 @@ class TransformersSection extends StatelessWidget {
 
   Widget _buildTransformer1() {
     return _TransformerWidget(
-      title: 'Transformer 1',
+      title: 'Trans 1',
       value: service.inputs[MqttTopics.transformer1],
       imageOn: 'assets/images/transformer_on.png',
       imageOff: 'assets/images/transformer_off.png',
@@ -74,7 +58,7 @@ class TransformersSection extends StatelessWidget {
 
   Widget _buildTransformer2() {
     return _TransformerWidget(
-      title: 'Transformer 2',
+      title: 'Trans 2',
       value: service.inputs[MqttTopics.transformer2],
       imageOn: 'assets/images/transformer_on.png',
       imageOff: 'assets/images/transformer_off.png',
@@ -117,21 +101,30 @@ class _TransformerWidget extends StatelessWidget {
     }
 
     return SizedBox(
-      height: isMobile ? 120.h : 180.h,
+      height: isMobile ? 100.h : 180.h,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Image.asset(
             image,
-            width: isMobile ? 64.w : 96.w,
-            height: isMobile ? 64.w : 96.w,
+            width: isMobile ? 48.w : 96.w,
+            height: isMobile ? 48.w : 96.w,
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: isMobile ? 4.h : 8.h),
           Text(
-            "$title\n$statusText",
+            title,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: isMobile ? 14.sp : 20.sp,
+              fontSize: isMobile ? 12.sp : 20.sp,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+          ),
+          Text(
+            statusText,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: isMobile ? 12.sp : 20.sp,
               fontWeight: FontWeight.w700,
               color: statusColor,
             ),

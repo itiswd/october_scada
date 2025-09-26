@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/utils/responsive_helper.dart';
 
 class PumpColumn extends StatelessWidget {
   final bool startOn;
@@ -21,12 +22,24 @@ class PumpColumn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = ResponsiveHelper.isMobile(context);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildValve(startOn, startOff, right: 8),
-        _buildPump(),
-        _buildValve(endOn, endOff, left: 32),
+        _buildValve(
+          startOn,
+          startOff,
+          right: isMobile ? 6.5 : 8,
+          isMobile: isMobile,
+        ),
+        _buildPump(isMobile),
+        _buildValve(
+          endOn,
+          endOff,
+          left: isMobile ? 18 : 32,
+          isMobile: isMobile,
+        ),
       ],
     );
   }
@@ -36,6 +49,7 @@ class PumpColumn extends StatelessWidget {
     bool isOff, {
     double right = 0,
     double left = 0,
+    required bool isMobile,
   }) {
     String imagePath;
     if (isOn) {
@@ -48,15 +62,19 @@ class PumpColumn extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(right: right, left: left),
-      child: Image.asset(imagePath, width: 96.w, height: 96.w),
+      child: Image.asset(
+        imagePath,
+        width: isMobile ? 40.w : 96.w,
+        height: isMobile ? 40.w : 96.w,
+      ),
     );
   }
 
-  Widget _buildPump() {
+  Widget _buildPump(bool isMobile) {
     return Image.asset(
       pump ? AppConstants.pumpOnImage : AppConstants.pumpOffImage,
-      width: 120.w,
-      height: 120.w,
+      width: isMobile ? 54.w : 120.w,
+      height: isMobile ? 54.w : 120.w,
     );
   }
 }

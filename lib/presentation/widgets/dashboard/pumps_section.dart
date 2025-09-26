@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/constants/mqtt_topics.dart';
 import '../../../core/utils/responsive_helper.dart';
@@ -25,17 +24,15 @@ class PumpsSection extends StatelessWidget {
   }
 
   Widget _buildMobileLayout() {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [_buildPump1(), _buildPump2(), _buildPump3()],
-        ),
-        SizedBox(height: 16.h),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [_buildPump4(), _buildPump5(), _buildPump6()],
-        ),
+        _buildPump1(),
+        _buildPump2(),
+        _buildPump3(),
+        _buildPump4(),
+        _buildPump5(),
+        _buildPump6(),
       ],
     );
   }

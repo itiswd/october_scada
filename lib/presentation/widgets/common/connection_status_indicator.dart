@@ -18,8 +18,8 @@ class ConnectionStatusIndicator extends StatelessWidget {
           children: [
             Image.asset(
               AppConstants.serverDownImage,
-              width: 32.w,
-              height: 32.w,
+              width: 28.w,
+              height: 28.w,
             ),
             SizedBox(width: 12.w),
             Text(
