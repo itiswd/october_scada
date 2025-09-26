@@ -36,7 +36,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
       padding: EdgeInsets.all(isMobile ? 12.w : 16.w),
       decoration: BoxDecoration(
         color: const Color(0xFF1A1A1A),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(40.r)),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24.r)),
       ),
       child: isMobile ? _buildMobileGauges() : _buildDesktopGauges(),
     );
@@ -107,7 +107,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
           value.toStringAsFixed(2),
           style: TextStyle(
             color: Colors.blue,
-            fontSize: isMobile ? 6.sp : 16.sp,
+            fontSize: isMobile ? 18.sp : 16.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -115,7 +115,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
           unit,
           style: TextStyle(
             color: Colors.white70,
-            fontSize: isMobile ? 4.sp : 12.sp,
+            fontSize: isMobile ? 10.sp : 12.sp,
             fontWeight: FontWeight.bold,
           ),
         ),

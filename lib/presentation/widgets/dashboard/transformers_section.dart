@@ -20,7 +20,7 @@ class TransformersSection extends StatelessWidget {
       height: isMobile ? 140.h : 300.h,
       decoration: BoxDecoration(
         color: AppTheme.darkerBackground,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: Padding(
         padding: EdgeInsets.all(isMobile ? 12.w : 20.w),
