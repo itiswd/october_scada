@@ -4,23 +4,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'auth_wrapper.dart';
+import 'presentation/pages/main_navigation_page.dart';
 import 'theme/app_theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-<<<<<<< HEAD
-=======
-  // Set transparent status bar
+  // Set transparent status bar with white icons
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
+      statusBarIconBrightness:
+          Brightness.light, // هذا يجعل الايقونات بيضاء على Android
+      statusBarBrightness: Brightness.dark, // هذا يجعل الايقونات بيضاء على iOS
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light,
     ),
   );
 
->>>>>>> ed61803edbadff2acaf3ad1789c834df22b5b00c
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -54,17 +55,9 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           title: 'October Stations',
-          theme: AppTheme.theme.copyWith(
-            appBarTheme: AppTheme.theme.appBarTheme.copyWith(
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
-                statusBarBrightness: Brightness.dark,
-              ),
-            ),
-          ),
+          theme: AppTheme.theme,
           debugShowCheckedModeBanner: false,
-          home: const AuthWrapper(),
+          home: const MainNavigationPage(),
         );
       },
     );

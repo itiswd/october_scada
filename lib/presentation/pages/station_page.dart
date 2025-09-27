@@ -17,17 +17,7 @@ class StationPage extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppTheme.backgroundColor,
-              AppTheme.backgroundColor,
-              AppTheme.darkerBackground.withValues(alpha: 0.1),
-            ],
-          ),
-        ),
+        color: AppTheme.backgroundColor,
         child: SafeArea(
           child: Padding(
             padding: EdgeInsets.all(

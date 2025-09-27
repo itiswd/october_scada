@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:flutter/services.dart';
-=======
 import 'package:flutter_riverpod/flutter_riverpod.dart';
->>>>>>> ed61803edbadff2acaf3ad1789c834df22b5b00c
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/utils/responsive_helper.dart';
-import '../../domain/providers/auth_provider.dart';
 import '../../theme/app_theme.dart';
 import 'dashboard_page.dart';
-import 'profile_page.dart';
 import 'station_page.dart';
 
 class MainNavigationPage extends ConsumerStatefulWidget {
@@ -33,18 +28,17 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
       const StationPage(stationNumber: 2),
       const StationPage(stationNumber: 3),
       const StationPage(stationNumber: 4),
-      const ProfilePage(), // صفحة الملف الشخصي
+      const StationPage(stationNumber: 5),
+      const StationPage(stationNumber: 6),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
-    final currentUser = ref.watch(currentUserProvider);
 
-<<<<<<< HEAD
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
+      value: SystemUiOverlayStyle(
         statusBarColor: AppTheme.darkerBackground,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark,
@@ -53,82 +47,6 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
         body: IndexedStack(index: _currentIndex, children: _pages),
         bottomNavigationBar: _buildBottomNavigationBar(isMobile),
       ),
-=======
-    return Scaffold(
-      appBar: _currentIndex == 0 ? _buildAppBar(currentUser, isMobile) : null,
-      body: IndexedStack(index: _currentIndex, children: _pages),
-      bottomNavigationBar: _buildBottomNavigationBar(isMobile),
->>>>>>> ed61803edbadff2acaf3ad1789c834df22b5b00c
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar(user, bool isMobile) {
-    return AppBar(
-      backgroundColor: AppTheme.darkerBackground,
-      elevation: 0,
-      title: Text(
-        'October SCADA',
-        style: TextStyle(
-          fontSize: isMobile ? 20.sp : 24.sp,
-          fontWeight: FontWeight.bold,
-          color: AppTheme.darkerBackground,
-        ),
-      ),
-      actions: [
-        Container(
-          margin: EdgeInsets.only(left: 16.w),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    user?.name ?? 'مستخدم',
-                    style: TextStyle(
-                      fontSize: isMobile ? 14.sp : 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.darkerBackground,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 6.w,
-                      vertical: 2.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.green.withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Text(
-                      'متصل',
-                      style: TextStyle(
-                        fontSize: isMobile ? 10.sp : 12.sp,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(width: 8.w),
-              GestureDetector(
-                onTap: () => setState(() => _currentIndex = 4),
-                child: CircleAvatar(
-                  radius: isMobile ? 18.r : 20.r,
-                  backgroundColor: Colors.blue,
-                  child: Icon(
-                    Icons.person,
-                    color: Colors.white,
-                    size: isMobile ? 18.sp : 20.sp,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -145,33 +63,12 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-<<<<<<< HEAD
               _buildNavItem(0, 'Station 1', isMobile),
               _buildNavItem(1, 'Station 2', isMobile),
               _buildNavItem(2, 'Station 3', isMobile),
               _buildNavItem(3, 'Station 4', isMobile),
-=======
-              _buildNavItem(0, 'Station 1', Icons.water_drop, isMobile),
-              _buildNavItem(
-                1,
-                'Station 2',
-                Icons.water_drop_outlined,
-                isMobile,
-              ),
-              _buildNavItem(
-                2,
-                'Station 3',
-                Icons.water_drop_outlined,
-                isMobile,
-              ),
-              _buildNavItem(
-                3,
-                'Station 4',
-                Icons.water_drop_outlined,
-                isMobile,
-              ),
-              _buildNavItem(4, 'الملف الشخصي', Icons.person, isMobile),
->>>>>>> ed61803edbadff2acaf3ad1789c834df22b5b00c
+              _buildNavItem(4, 'Station 5', isMobile),
+              _buildNavItem(5, 'Station 6', isMobile),
             ],
           ),
         ),
