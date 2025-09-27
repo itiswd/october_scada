@@ -47,7 +47,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 300), true),
+        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 400), true),
         _buildGaugeItem(bar, "BAR", _calculatePercent(bar, 10), true),
       ],
     );
@@ -57,7 +57,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 360), false),
+        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 400), false),
         SizedBox(width: 56.w),
         _buildGaugeItem(bar, "BAR", _calculatePercent(bar, 10), false),
       ],
@@ -90,7 +90,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
           percent: percent,
           progressColor: Colors.blue,
           backgroundColor: Colors.grey.shade800,
-          circularStrokeCap: CircularStrokeCap.round,
+          circularStrokeCap: CircularStrokeCap.butt,
           startAngle: 270,
           center: _buildGaugeCenter(value, unit, isMobile),
           animation: false,

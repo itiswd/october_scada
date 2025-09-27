@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../core/utils/responsive_helper.dart';
@@ -27,24 +28,22 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
 
-    return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
-      bottomNavigationBar: _buildBottomNavigationBar(isMobile),
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: AppTheme.darkerBackground,
+        statusBarIconBrightness: Brightness.light,
+        statusBarBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        body: IndexedStack(index: _currentIndex, children: _pages),
+        bottomNavigationBar: _buildBottomNavigationBar(isMobile),
+      ),
     );
   }
 
   Widget _buildBottomNavigationBar(bool isMobile) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.darkerBackground,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
+      color: AppTheme.darkerBackground,
       child: SafeArea(
         child: Container(
           height: isMobile ? 72.h : 104.h,
@@ -55,25 +54,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(0, 'Station 1', Icons.water_drop, isMobile),
-              _buildNavItem(
-                1,
-                'Station 2',
-                Icons.water_drop_outlined,
-                isMobile,
-              ),
-              _buildNavItem(
-                2,
-                'Station 3',
-                Icons.water_drop_outlined,
-                isMobile,
-              ),
-              _buildNavItem(
-                3,
-                'Station 4',
-                Icons.water_drop_outlined,
-                isMobile,
-              ),
+              _buildNavItem(0, 'Station 1', isMobile),
+              _buildNavItem(1, 'Station 2', isMobile),
+              _buildNavItem(2, 'Station 3', isMobile),
+              _buildNavItem(3, 'Station 4', isMobile),
             ],
           ),
         ),
@@ -81,9 +65,10 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
     );
   }
 
-  Widget _buildNavItem(int index, String label, IconData icon, bool isMobile) {
+  Widget _buildNavItem(int index, String label, bool isMobile) {
     final isSelected = _currentIndex == index;
     final color = isSelected ? Colors.blue : Colors.grey;
+    final icon = isSelected ? Icons.water_drop : Icons.water_drop_outlined;
 
     return InkWell(
       onTap: () => setState(() => _currentIndex = index),

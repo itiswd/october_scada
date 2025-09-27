@@ -10,15 +10,6 @@ import 'theme/app_theme.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Set transparent status bar
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: AppTheme.darkerBackground,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.light,
-    ),
-  );
-
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -52,7 +43,15 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           title: 'October Stations',
-          theme: AppTheme.theme,
+          theme: AppTheme.theme.copyWith(
+            appBarTheme: AppTheme.theme.appBarTheme.copyWith(
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.light,
+                statusBarBrightness: Brightness.dark,
+              ),
+            ),
+          ),
           debugShowCheckedModeBanner: false,
           home: const MainNavigationPage(),
         );
