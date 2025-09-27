@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -24,16 +26,57 @@ class StationTankCard extends StatefulWidget {
 
 class _StationTankCardState extends State<StationTankCard> {
   List<double> previousLevels = [];
+  String currentStatus = "Stable";
+  Timer? _statusTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    previousLevels = widget.levels;
+    currentStatus = _calculateStatus();
+    _startStatusTimer();
+  }
 
   @override
   void didUpdateWidget(covariant StationTankCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    previousLevels = oldWidget.levels;
+    // حفظ المستويات السابقة للمقارنة
+    if (oldWidget.levels != widget.levels) {
+      previousLevels = oldWidget.levels;
+    }
+  }
+
+  @override
+  void dispose() {
+    _statusTimer?.cancel();
+    super.dispose();
+  }
+
+  void _startStatusTimer() {
+    _statusTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (mounted) {
+        final newStatus = _calculateStatus();
+        if (newStatus != currentStatus) {
+          setState(() {
+            currentStatus = newStatus;
+          });
+        }
+        // تحديث المستويات السابقة للمقارنة التالية
+        previousLevels = List.from(widget.levels);
+      }
+    });
   }
 
   String _calculateStatus() {
+    if (previousLevels.isEmpty) return "Stable";
+
     final currentSum = widget.levels.fold(0.0, (a, b) => a + b);
     final previousSum = previousLevels.fold(0.0, (a, b) => a + b);
+
+    final difference = (currentSum - previousSum).abs();
+
+    // إضافة threshold للتجنب التذبذب في القيم الصغيرة
+    if (difference < 0.01) return "Stable";
 
     if (currentSum > previousSum) return "Filling";
     if (currentSum < previousSum) return "Draining";
@@ -64,9 +107,8 @@ class _StationTankCardState extends State<StationTankCard> {
 
   @override
   Widget build(BuildContext context) {
-    final status = _calculateStatus();
-    final statusColor = _getStatusColor(status);
-    final statusIcon = _getStatusIcon(status);
+    final statusColor = _getStatusColor(currentStatus);
+    final statusIcon = _getStatusIcon(currentStatus);
     final isMobile = ResponsiveHelper.isMobile(context);
 
     return Container(
@@ -79,7 +121,7 @@ class _StationTankCardState extends State<StationTankCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(status, statusColor, statusIcon, isMobile),
+          _buildHeader(currentStatus, statusColor, statusIcon, isMobile),
           SizedBox(height: isMobile ? 16.h : 20.h),
           _buildMetrics(isMobile),
           SizedBox(height: isMobile ? 24.h : 40.h),
@@ -97,13 +139,16 @@ class _StationTankCardState extends State<StationTankCard> {
   ) {
     return Row(
       children: [
-        CircleAvatar(
-          radius: isMobile ? 12.r : 16.r,
-          backgroundColor: statusColor.withAlpha(25),
-          child: Icon(
-            statusIcon,
-            color: statusColor,
-            size: isMobile ? 12.sp : 16.sp,
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          child: CircleAvatar(
+            radius: isMobile ? 12.r : 16.r,
+            backgroundColor: statusColor.withAlpha(25),
+            child: Icon(
+              statusIcon,
+              color: statusColor,
+              size: isMobile ? 12.sp : 16.sp,
+            ),
           ),
         ),
         SizedBox(width: 8.w),
@@ -116,13 +161,14 @@ class _StationTankCardState extends State<StationTankCard> {
           ),
         ),
         const Spacer(),
-        Text(
-          status,
+        AnimatedDefaultTextStyle(
+          duration: const Duration(milliseconds: 500),
           style: TextStyle(
             color: statusColor,
             fontSize: isMobile ? 16.sp : 20.sp,
             fontWeight: FontWeight.bold,
           ),
+          child: Text(status),
         ),
       ],
     );
@@ -314,7 +360,8 @@ class _StationTankCardState extends State<StationTankCard> {
         children: [
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 800),
               height: fillHeight,
               width: double.infinity,
               color: statusColor,
