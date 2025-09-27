@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'presentation/pages/dashboard_page.dart';
+import 'presentation/pages/main_navigation_page.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           title: 'October Stations',
           theme: AppTheme.theme,
           debugShowCheckedModeBanner: false,
-          home: const DashboardPage(),
+          home: const MainNavigationPage(),
         );
       },
     );

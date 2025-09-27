@@ -47,7 +47,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 100), true),
+        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 300), true),
         _buildGaugeItem(bar, "BAR", _calculatePercent(bar, 10), true),
       ],
     );
@@ -57,7 +57,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 100), false),
+        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 360), false),
         SizedBox(width: 56.w),
         _buildGaugeItem(bar, "BAR", _calculatePercent(bar, 10), false),
       ],
@@ -77,7 +77,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
     bool isMobile,
   ) {
     final radius = isMobile ? 56.r : 88.r;
-    final lineWidth = isMobile ? 10.w : 28.w;
+    final lineWidth = isMobile ? 12.w : 24.w;
     final avatarRadius = isMobile ? 48.r : 72.r;
 
     return Stack(
@@ -90,10 +90,10 @@ class WeatherAndGaugesSection extends StatelessWidget {
           percent: percent,
           progressColor: Colors.blue,
           backgroundColor: Colors.grey.shade800,
-          circularStrokeCap: CircularStrokeCap.butt,
+          circularStrokeCap: CircularStrokeCap.round,
           startAngle: 270,
           center: _buildGaugeCenter(value, unit, isMobile),
-          animation: true,
+          animation: false,
           animationDuration: 1500,
         ),
       ],
@@ -108,7 +108,7 @@ class WeatherAndGaugesSection extends StatelessWidget {
           value.toStringAsFixed(2),
           style: TextStyle(
             color: Colors.blue,
-            fontSize: isMobile ? 18.sp : 16.sp,
+            fontSize: isMobile ? 18.sp : 20.sp,
             fontWeight: FontWeight.bold,
           ),
         ),

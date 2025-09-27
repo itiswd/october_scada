@@ -32,7 +32,7 @@ class DashboardPage extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (isMobile) SafeArea(child: SizedBox(height: 16.h)),
+              if (isMobile) SizedBox(height: 32.h),
               // Connection Status
               if (!isConnected) const ConnectionStatusIndicator(),
 
@@ -70,7 +70,7 @@ class DashboardPage extends ConsumerWidget {
 
         // Transformers Section
         TransformersSection(service: service),
-        SizedBox(height: 0.2.h),
+        SizedBox(height: 0.5.h),
 
         // Weather and Gauges
         WeatherAndGaugesSection(

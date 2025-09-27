@@ -21,7 +21,6 @@ class MqttTopics {
   static const String valve6Close = 'IN_41_V6_C';
   static const String valve7Open = 'IN_44_V7_O';
   static const String valve7Close = 'IN_45_V7_C';
-  static const String valve11Open = 'IN_60_V11_O';
 
   // Transformer and Generator inputs
   static const String transformer1 = 'IN_1_TR1_W2';

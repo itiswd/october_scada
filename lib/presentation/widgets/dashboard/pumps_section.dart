@@ -103,7 +103,7 @@ class PumpsSection extends StatelessWidget {
 
   Widget _buildPump6() {
     return PumpColumn(
-      startOn: service.inputs[MqttTopics.valve11Open] ?? false,
+      startOn: false,
       startOff: false,
       pump: service.inputs[MqttTopics.pump6] ?? false,
       endOn: false,

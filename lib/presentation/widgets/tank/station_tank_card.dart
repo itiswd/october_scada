@@ -297,9 +297,9 @@ class _StationTankCardState extends State<StationTankCard> {
 
   Widget _buildSingleBar(double level, Color statusColor, bool isMobile) {
     final percent = (level / widget.capacity) * 100;
-    final barWidth = isMobile ? 60.w : 180.w;
+    final barWidth = isMobile ? 68.w : 180.w;
     final barHeight = isMobile ? 160.h : 280.h;
-    final fillHeight = (level / widget.capacity) * (isMobile ? 120.h : 200.h);
+    final fillHeight = (level / widget.capacity) * (isMobile ? 160.h : 280.h);
 
     return Container(
       width: barWidth,
