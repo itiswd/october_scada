@@ -22,6 +22,7 @@ dependencies:
   http: ^1.5.0
   flutter_launcher_icons: ^0.14.4
   flutter_screenutil: ^5.9.3
+  email_otp: ^3.0.2
 
 flutter_icons:
   android: true

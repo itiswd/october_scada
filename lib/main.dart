@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'presentation/pages/main_navigation_page.dart';
+import 'auth_wrapper.dart';
 import 'theme/app_theme.dart';
 
 void main() {
@@ -13,9 +13,8 @@ void main() {
   // Set transparent status bar
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: AppTheme.darkerBackground,
-      statusBarIconBrightness: Brightness.light,
-      statusBarBrightness: Brightness.light,
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
     ),
   );
 
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
           title: 'October Stations',
           theme: AppTheme.theme,
           debugShowCheckedModeBanner: false,
-          home: const MainNavigationPage(),
+          home: const AuthWrapper(),
         );
       },
     );
