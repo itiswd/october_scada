@@ -26,14 +26,16 @@ class StationTankCard extends StatefulWidget {
 
 class _StationTankCardState extends State<StationTankCard> {
   List<double> previousLevels = [];
-  String currentStatus = "Stable";
+  List<String> barStatuses = [];
+  String overallStatus = "Stable";
   Timer? _statusTimer;
 
   @override
   void initState() {
     super.initState();
-    previousLevels = widget.levels;
-    currentStatus = _calculateStatus();
+    previousLevels = List.from(widget.levels);
+    barStatuses = List.generate(widget.levels.length, (_) => "Stable");
+    overallStatus = _calculateOverallStatus();
     _startStatusTimer();
   }
 
@@ -55,28 +57,41 @@ class _StationTankCardState extends State<StationTankCard> {
   void _startStatusTimer() {
     _statusTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (mounted) {
-        final newStatus = _calculateStatus();
-        if (newStatus != currentStatus) {
-          setState(() {
-            currentStatus = newStatus;
-          });
-        }
+        _updateBarStatuses();
+        final newOverallStatus = _calculateOverallStatus();
+
+        setState(() {
+          overallStatus = newOverallStatus;
+        });
+
         // تحديث المستويات السابقة للمقارنة التالية
         previousLevels = List.from(widget.levels);
       }
     });
   }
 
-  String _calculateStatus() {
+  void _updateBarStatuses() {
+    for (int i = 0; i < widget.levels.length; i++) {
+      if (i < previousLevels.length) {
+        final currentLevel = widget.levels[i];
+        final previousLevel = previousLevels[i];
+
+        if (currentLevel > previousLevel) {
+          barStatuses[i] = "Filling";
+        } else if (currentLevel < previousLevel) {
+          barStatuses[i] = "Draining";
+        } else {
+          barStatuses[i] = "Stable";
+        }
+      }
+    }
+  }
+
+  String _calculateOverallStatus() {
     if (previousLevels.isEmpty) return "Stable";
 
     final currentSum = widget.levels.fold(0.0, (a, b) => a + b);
     final previousSum = previousLevels.fold(0.0, (a, b) => a + b);
-
-    final difference = (currentSum - previousSum).abs();
-
-    // إضافة threshold للتجنب التذبذب في القيم الصغيرة
-    if (difference < 0.01) return "Stable";
 
     if (currentSum > previousSum) return "Filling";
     if (currentSum < previousSum) return "Draining";
@@ -107,8 +122,8 @@ class _StationTankCardState extends State<StationTankCard> {
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = _getStatusColor(currentStatus);
-    final statusIcon = _getStatusIcon(currentStatus);
+    final statusColor = _getStatusColor(overallStatus);
+    final statusIcon = _getStatusIcon(overallStatus);
     final isMobile = ResponsiveHelper.isMobile(context);
 
     return Container(
@@ -121,11 +136,11 @@ class _StationTankCardState extends State<StationTankCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(currentStatus, statusColor, statusIcon, isMobile),
+          _buildHeader(overallStatus, statusColor, statusIcon, isMobile),
           SizedBox(height: isMobile ? 16.h : 20.h),
           _buildMetrics(isMobile),
           SizedBox(height: isMobile ? 24.h : 40.h),
-          _buildLevelBars(statusColor, isMobile),
+          _buildLevelBars(isMobile),
         ],
       ),
     );
@@ -291,12 +306,10 @@ class _StationTankCardState extends State<StationTankCard> {
     );
   }
 
-  Widget _buildLevelBars(Color statusColor, bool isMobile) {
+  Widget _buildLevelBars(bool isMobile) {
     return SizedBox(
-      height: isMobile ? 200.h : 300.h,
-      child: Stack(
-        children: [_buildGridLines(), _buildBars(statusColor, isMobile)],
-      ),
+      height: isMobile ? 200.h : 352.h,
+      child: Stack(children: [_buildGridLines(), _buildBars(isMobile)]),
     );
   }
 
@@ -312,79 +325,134 @@ class _StationTankCardState extends State<StationTankCard> {
     );
   }
 
-  Widget _buildBars(Color statusColor, bool isMobile) {
+  Widget _buildBars(bool isMobile) {
     return Center(
       child: isMobile
-          ? _buildMobileBars(statusColor)
-          : _buildDesktopBars(statusColor),
+          ? _buildMobileBars(isMobile)
+          : _buildDesktopBars(isMobile),
     );
   }
 
-  Widget _buildMobileBars(Color statusColor) {
+  Widget _buildMobileBars(bool isMobile) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: widget.levels
-          .map((level) => _buildSingleBar(level, statusColor, true))
-          .toList(),
+      children: widget.levels.asMap().entries.map((entry) {
+        int index = entry.key;
+        double level = entry.value;
+        String barStatus = index < barStatuses.length
+            ? barStatuses[index]
+            : "Stable";
+        Color barColor = _getStatusColor(barStatus);
+        return _buildSingleBar(level, barColor, barStatus, isMobile, index);
+      }).toList(),
     );
   }
 
-  Widget _buildDesktopBars(Color statusColor) {
+  Widget _buildDesktopBars(bool isMobile) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: widget.levels.map((level) {
+      children: widget.levels.asMap().entries.map((entry) {
+        int index = entry.key;
+        double level = entry.value;
+        String barStatus = index < barStatuses.length
+            ? barStatuses[index]
+            : "Stable";
+        Color barColor = _getStatusColor(barStatus);
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 24.w),
-          child: _buildSingleBar(level, statusColor, false),
+          child: _buildSingleBar(level, barColor, barStatus, isMobile, index),
         );
       }).toList(),
     );
   }
 
-  Widget _buildSingleBar(double level, Color statusColor, bool isMobile) {
+  Widget _buildSingleBar(
+    double level,
+    Color barColor,
+    String barStatus,
+    bool isMobile,
+    int index,
+  ) {
     final percent = (level / widget.capacity) * 100;
     final barWidth = isMobile ? 68.w : 180.w;
-    final barHeight = isMobile ? 160.h : 280.h;
-    final fillHeight = (level / widget.capacity) * (isMobile ? 160.h : 280.h);
+    final barHeight = isMobile ? 160.h : 320.h;
+    final fillHeight = (level / widget.capacity) * (isMobile ? 160.h : 320.h);
 
-    return Container(
-      width: barWidth,
-      height: barHeight,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: Colors.white.withAlpha(15),
-        border: Border.all(color: Colors.grey.shade700),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Stack(
-        children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 800),
-              height: fillHeight,
-              width: double.infinity,
-              color: statusColor,
-            ),
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: EdgeInsets.only(top: 4.h),
-              child: Text(
-                "${percent.toStringAsFixed(1)}%",
+    return Column(
+      children: [
+        // Status indicator لكل bar
+        Container(
+          width: barWidth,
+          padding: EdgeInsets.symmetric(vertical: 2.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                _getStatusIcon(barStatus),
+                color: barColor,
+                size: isMobile ? 12.sp : 16.sp,
+              ),
+              SizedBox(width: 2.w),
+              Text(
+                barStatus,
                 style: TextStyle(
-                  color: level == widget.capacity
-                      ? Colors.white
-                      : Colors.white70,
-                  fontWeight: FontWeight.w600,
-                  fontSize: isMobile ? 10.sp : 16.sp,
+                  color: barColor,
+                  fontSize: isMobile ? 8.sp : 12.sp,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+        SizedBox(height: 4.h),
+        // البار نفسه
+        Container(
+          width: barWidth,
+          height: barHeight,
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+            color: Colors.white.withAlpha(15),
+            border: Border.all(color: Colors.grey.shade700),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 800),
+                  height: fillHeight,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: barColor,
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [barColor.withAlpha(200), barColor],
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 4.h),
+                  child: Text(
+                    "${percent.toStringAsFixed(1)}%",
+                    style: TextStyle(
+                      color: level == widget.capacity
+                          ? Colors.white
+                          : Colors.white70,
+                      fontWeight: FontWeight.w600,
+                      fontSize: isMobile ? 10.sp : 16.sp,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
