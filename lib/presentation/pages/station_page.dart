@@ -23,6 +23,7 @@ class StationPage extends StatelessWidget {
             end: Alignment.bottomCenter,
             colors: [
               AppTheme.backgroundColor,
+              AppTheme.backgroundColor,
               AppTheme.darkerBackground.withValues(alpha: 0.1),
             ],
           ),
@@ -81,7 +82,7 @@ class StationPage extends StatelessWidget {
                     color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: Colors.orange.withValues(alpha: 0.3),
+                      color: Colors.orange.withValues(alpha: 0.7),
                       width: 1,
                     ),
                   ),

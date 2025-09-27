@@ -48,7 +48,7 @@ class TransformersSection extends StatelessWidget {
 
   Widget _buildTransformer1() {
     return _TransformerWidget(
-      title: 'Trans 1',
+      title: 'Transformer 1',
       value: service.inputs[MqttTopics.transformer1],
       imageOn: 'assets/images/transformer_on.png',
       imageOff: 'assets/images/transformer_off.png',
@@ -58,7 +58,7 @@ class TransformersSection extends StatelessWidget {
 
   Widget _buildTransformer2() {
     return _TransformerWidget(
-      title: 'Trans 2',
+      title: 'Transformer 2',
       value: service.inputs[MqttTopics.transformer2],
       imageOn: 'assets/images/transformer_on.png',
       imageOff: 'assets/images/transformer_off.png',

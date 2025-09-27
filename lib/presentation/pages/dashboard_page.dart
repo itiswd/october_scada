@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:october_scada/presentation/widgets/dashboard/weather_gauges_section.dart';
 import 'package:october_scada/presentation/widgets/tank/station_tank_card.dart';
 import 'package:october_scada/presentation/widgets/weather/wave_tank.dart';
+import 'package:october_scada/theme/app_theme.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../core/constants/mqtt_topics.dart';
@@ -24,34 +25,50 @@ class DashboardPage extends ConsumerWidget {
     final isDesktop = ResponsiveHelper.isDesktop(context);
 
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(
-            ResponsiveHelper.getHorizontalPadding(context),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isMobile) SizedBox(height: 32.h),
-              // Connection Status
-              if (!isConnected) const ConnectionStatusIndicator(),
-
-              // Wave Tank - أصغر في الموبايل
-              Center(
-                child: WaveTank(
-                  height: isMobile ? 40.h : 56.h,
-                  waveAmplitude: isMobile ? 4.0 : 6.0,
-                  waveSpeed: 1.0,
-                ),
-              ),
-
-              // Main Content
-              if (isMobile) ...[
-                _buildMobileLayout(service),
-              ] else ...[
-                _buildDesktopLayout(service, isDesktop),
-              ],
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppTheme.backgroundColor,
+              AppTheme.backgroundColor,
+              AppTheme.darkerBackground.withValues(alpha: 1),
             ],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(
+                ResponsiveHelper.getHorizontalPadding(context),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Connection Status
+                  if (!isConnected) const ConnectionStatusIndicator(),
+
+                  // Wave Tank - أصغر في الموبايل
+                  Center(
+                    child: WaveTank(
+                      height: isMobile ? 40.h : 56.h,
+                      waveAmplitude: isMobile ? 4.0 : 6.0,
+                      waveSpeed: 1.0,
+                    ),
+                  ),
+
+                  // Main Content
+                  if (isMobile) ...[
+                    _buildMobileLayout(service),
+                  ] else ...[
+                    _buildDesktopLayout(service, isDesktop),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

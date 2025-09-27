@@ -13,8 +13,9 @@ void main() {
   // Set transparent status bar
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
+      statusBarColor: AppTheme.darkerBackground,
+      statusBarIconBrightness: Brightness.light,
+      statusBarBrightness: Brightness.light,
     ),
   );
 

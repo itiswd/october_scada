@@ -51,7 +51,6 @@ class WaveTankState extends State<WaveTank>
       builder: (context, constraints) {
         final width = constraints.maxWidth;
         final height = widget.height;
-
         return SizedBox(
           width: width,
           height: height,
