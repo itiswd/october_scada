@@ -1,4 +1,9 @@
+// ======================
+// MQTT Topics
+// ======================
 class MqttTopics {
+  // ===== Station1 =====
+
   // Pump inputs
   static const String pump1 = 'IN_2_P1';
   static const String pump2 = 'IN_5_P2';
@@ -33,4 +38,68 @@ class MqttTopics {
   static const String level3 = 'ANLOG_IN3_LVL3';
   static const String pressure = 'ANLOG_IN5_PRESURE';
   static const String flow = 'ANLOG_IN6_FLOW';
+
+  // ===== Station3 =====
+
+  // Power sources
+  static const String supply1 = 'supply1';
+  static const String supply2 = 'supply2';
+  static const String generator = 'generator';
+
+  // Pressure sensors
+  static const String pressureSensor1 = 'sensor1';
+  static const String pressureSensor2 = 'sensor2';
+
+  // Pumps status
+  static const String pump1IsRunning = 'pump1_is_runnung';
+  static const String pump2IsRunning = 'pump2_is_runnung';
+  static const String pump3IsRunning = 'pump3_is_runnung';
+  static const String pump4IsRunning = 'pump4_is_runnung';
+  static const String pump5IsRunning = 'pump5_is_runnung';
+  static const String pump6IsRunning = 'pump6_is_runnung';
+
+  static const String pump1IsAuto = 'pump1_is_auto';
+  static const String pump2IsAuto = 'pump2_is_auto';
+  static const String pump3IsAuto = 'pump3_is_auto';
+  static const String pump4IsAuto = 'pump4_is_auto';
+  static const String pump5IsAuto = 'pump5_is_auto';
+  static const String pump6IsAuto = 'pump6_is_auto';
+
+  static const String pump1IsRemote = 'pump1_is_remote';
+  static const String pump2IsRemote = 'pump2_is_remote';
+  static const String pump3IsRemote = 'pump3_is_remote';
+  static const String pump4IsRemote = 'pump4_is_remote';
+  static const String pump5IsRemote = 'pump5_is_remote';
+  static const String pump6IsRemote = 'pump6_is_remote';
+
+  // Pump runtime
+  static const String pump1Hour = 'pump1_hour';
+  static const String pump1Minute = 'pump1_minute';
+  static const String pump1Second = 'pump1_second';
+
+  static const String pump2Hour = 'pump2_hour';
+  static const String pump2Minute = 'pump2_minute';
+  static const String pump2Second = 'pump2_second';
+
+  static const String pump3Hour = 'pump3_hour';
+  static const String pump3Minute = 'pump3_minute';
+  static const String pump3Second = 'pump3_second';
+
+  static const String pump4Hour = 'pump4_hour';
+  static const String pump4Minute = 'pump4_minute';
+  static const String pump4Second = 'pump4_second';
+
+  static const String pump5Hour = 'pump5_hour';
+  static const String pump5Minute = 'pump5_minute';
+  static const String pump5Second = 'pump5_second';
+
+  static const String pump6Hour = 'pump6_hour';
+  static const String pump6Minute = 'pump6_minute';
+  static const String pump6Second = 'pump6_second';
+
+  // Tank data
+  static const String tank1Flow = 'tank1_flow';
+  static const String tank2Flow = 'tank2_flow';
+  static const String tank1Level = 'tank1_level';
+  static const String tank2Level = 'tank2_level';
 }

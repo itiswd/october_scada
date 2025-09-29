@@ -1,3 +1,6 @@
+// ======================
+// Unified MQTT Service
+// ======================
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -6,10 +9,21 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttService extends ChangeNotifier {
   final client = MqttServerClient('100.120.50.109', 'flutter_scada');
-  final String baseTopic = 'station1/#';
+  final String station; // station1 أو station3
   bool connected = false;
+
+  // Station1 data
   Map<String, bool> inputs = {};
   Map<String, double> holdingRegisters = {};
+
+  // Station3 data
+  Map<String, bool> powerSources = {};
+  Map<String, double> pressureSensors = {};
+  Map<String, bool> pumpsStatus = {};
+  Map<String, int> pumpsTime = {};
+  Map<String, double> tankData = {};
+
+  MqttService({required this.station});
 
   Future<void> connect() async {
     client.port = 1883;
@@ -22,12 +36,12 @@ class MqttService extends ChangeNotifier {
     try {
       await client.connect();
     } catch (e) {
-      debugPrint("❌ Connection error: $e");
+      debugPrint("❌ $station Connection error: $e");
       client.disconnect();
     }
 
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
-      client.subscribe(baseTopic, MqttQos.atMostOnce);
+      client.subscribe('$station/#', MqttQos.atMostOnce);
       client.updates?.listen(_onMessage);
     }
   }
@@ -35,13 +49,13 @@ class MqttService extends ChangeNotifier {
   void _onConnected() {
     connected = true;
     notifyListeners();
-    debugPrint('🟢 MQTT Connected');
+    debugPrint('🟢 MQTT $station Connected');
   }
 
   void _onDisconnected() {
     connected = false;
     notifyListeners();
-    debugPrint('🔴 MQTT Disconnected');
+    debugPrint('🔴 MQTT $station Disconnected');
   }
 
   void _onMessage(List<MqttReceivedMessage<MqttMessage>> event) {
@@ -58,7 +72,7 @@ class MqttService extends ChangeNotifier {
       _processMessage(topic, value);
       notifyListeners();
     } catch (e) {
-      debugPrint("❌ Error decoding message: $e | payload=$payload");
+      debugPrint("❌ Error decoding $station message: $e | payload=$payload");
     }
   }
 
@@ -68,12 +82,37 @@ class MqttService extends ChangeNotifier {
       final category = parts[1];
       final key = parts[2];
 
-      if (category == "inputs") {
-        inputs[key] = value as bool;
-      } else if (category == "holding_resgisters") {
-        holdingRegisters[key] = (value is int)
-            ? value.toDouble()
-            : (value as num).toDouble();
+      if (station == "station1") {
+        if (category == "inputs") {
+          inputs[key] = value as bool;
+        } else if (category == "holding_resgisters") {
+          holdingRegisters[key] = (value is int)
+              ? value.toDouble()
+              : (value as num).toDouble();
+        }
+      } else if (station == "station3") {
+        switch (category) {
+          case "power":
+            powerSources[key] = value as bool;
+            break;
+          case "pressure_sensors":
+            pressureSensors[key] = (value is int)
+                ? value.toDouble()
+                : (value as num).toDouble();
+            break;
+          case "pumps_status":
+            if (key.contains('_flow') || key.contains('_level')) {
+              tankData[key] = (value is int)
+                  ? value.toDouble()
+                  : (value as num).toDouble();
+            } else {
+              pumpsStatus[key] = value as bool;
+            }
+            break;
+          case "pumps_time":
+            pumpsTime[key] = value as int;
+            break;
+        }
       }
     }
   }

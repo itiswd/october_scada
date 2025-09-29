@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/utils/responsive_helper.dart';
 import '../../theme/app_theme.dart';
 import 'dashboard_page.dart';
+import 'station3_page.dart';
 import 'station_page.dart';
 
 class MainNavigationPage extends ConsumerStatefulWidget {
@@ -26,7 +27,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
     _pages = [
       const DashboardPage(), // Station 1 - المحطة الأساسية
       const StationPage(stationNumber: 2),
-      const StationPage(stationNumber: 3),
+      const Station3Page(), // Station 3 - مع البيانات الكاملة
       const StationPage(stationNumber: 4),
       const StationPage(stationNumber: 5),
       const StationPage(stationNumber: 6),
