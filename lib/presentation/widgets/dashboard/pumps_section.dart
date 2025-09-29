@@ -95,7 +95,7 @@ class PumpsSection extends StatelessWidget {
     return PumpColumn(
       startOn: false,
       startOff: false,
-      pump: service.inputs[MqttTopics.pump1] ?? false,
+      pump: service.inputs[MqttTopics.pump5] ?? false,
       endOn: false,
       endOff: false,
     );

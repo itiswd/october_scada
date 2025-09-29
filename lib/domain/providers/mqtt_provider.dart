@@ -5,5 +5,6 @@ import '../../data/services/mqtt_service.dart';
 final mqttProvider = ChangeNotifierProvider<MqttService>((ref) {
   final service = MqttService(station: "station1");
   service.connect();
+  ref.onDispose(service.disconnect);
   return service;
 });
