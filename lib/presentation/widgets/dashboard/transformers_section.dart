@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/constants/mqtt_topics.dart';
-import '../../../core/utils/responsive_helper.dart';
-import '../../../data/services/mqtt_service.dart';
-import '../../../theme/app_theme.dart';
+import 'package:october_scada/core/core.dart';
+import 'package:october_scada/data/data.dart';
+import 'package:october_scada/theme/theme.dart';
 
 class TransformersSection extends StatelessWidget {
   final MqttService service;

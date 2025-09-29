@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import '../../../core/utils/responsive_helper.dart';
-import '../../../theme/app_theme.dart';
+import 'package:october_scada/core/core.dart';
+import 'package:october_scada/theme/theme.dart';
 
 class PressureSensorsWidget extends StatelessWidget {
   final double sensor1;

@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:october_scada/presentation/widgets/dashboard/weather_gauges_section.dart';
-import 'package:october_scada/presentation/widgets/tank/station_tank_card.dart';
-import 'package:october_scada/presentation/widgets/weather/wave_tank.dart';
-
-import '../../core/constants/app_constants.dart';
-import '../../core/constants/mqtt_topics.dart';
-import '../../core/utils/responsive_helper.dart';
-import '../../domain/providers/mqtt_provider.dart';
-import '../widgets/common/connection_status_indicator.dart';
-import '../widgets/dashboard/pumps_section.dart';
-import '../widgets/dashboard/transformers_section.dart';
+import 'package:october_scada/core/core.dart';
+import 'package:october_scada/domain/domain.dart';
+import 'package:october_scada/presentation/widgets/widgets.dart';
 
 class DashboardPage extends ConsumerWidget {
   const DashboardPage({super.key});

@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:october_scada/core/constants/mqtt_topics.dart';
-import 'package:october_scada/domain/providers/mqtt_provider.dart';
-import 'package:october_scada/presentation/widgets/tank/station_tank_card3.dart';
-
-import '../../core/constants/app_constants.dart';
-import '../../core/utils/responsive_helper.dart';
-import '../widgets/common/connection_status_indicator.dart';
-import '../widgets/station3/power_sources_station3.dart';
-import '../widgets/station3/pressure_sensors_widget.dart';
-import '../widgets/station3/pump_card_station3.dart';
+import 'package:october_scada/core/core.dart';
+import 'package:october_scada/domain/domain.dart';
+import 'package:october_scada/presentation/widgets/widgets.dart';
 
 class Station3Page extends ConsumerWidget {
   const Station3Page({super.key});
