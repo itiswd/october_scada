@@ -4,6 +4,7 @@ class MqttTopics {
   static const String pump2 = 'IN_5_P2';
   static const String pump3 = 'IN_8_P3';
   static const String pump4 = 'IN_11_P4';
+  static const String pump5 = 'IN_14_P5';
   static const String pump6 = 'IN_17_P6';
 
   // Valve inputs

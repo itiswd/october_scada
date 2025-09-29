@@ -15,15 +15,24 @@ class MqttService extends ChangeNotifier {
     client.port = 1883;
     client.keepAlivePeriod = 20;
     client.logging(on: false);
+    client.autoReconnect = true;
 
     client.onConnected = _onConnected;
     client.onDisconnected = _onDisconnected;
+    client.onAutoReconnect = _onAutoReconnect;
+    client.onAutoReconnected = _onAutoReconnected;
 
     try {
       await client.connect();
     } catch (e) {
       debugPrint("❌ Connection error: $e");
       client.disconnect();
+      // Retry initial connection after a short delay
+      Future.delayed(const Duration(seconds: 5), () {
+        if (!connected) {
+          connect();
+        }
+      });
     }
 
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
@@ -42,6 +51,14 @@ class MqttService extends ChangeNotifier {
     connected = false;
     notifyListeners();
     debugPrint('🔴 MQTT Disconnected');
+  }
+
+  void _onAutoReconnect() {
+    debugPrint('🔄 MQTT Auto reconnecting...');
+  }
+
+  void _onAutoReconnected() {
+    debugPrint('✅ MQTT Auto reconnected');
   }
 
   void _onMessage(List<MqttReceivedMessage<MqttMessage>> event) {
@@ -70,7 +87,7 @@ class MqttService extends ChangeNotifier {
 
       if (category == "inputs") {
         inputs[key] = value as bool;
-      } else if (category == "holding_resgisters") {
+      } else if (category == "holding_registers" || category == "holding_resgisters") {
         holdingRegisters[key] = (value is int)
             ? value.toDouble()
             : (value as num).toDouble();
