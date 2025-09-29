@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:october_scada/core/utils/responsive_helper.dart';
+import 'package:october_scada/core/core.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget mobile;

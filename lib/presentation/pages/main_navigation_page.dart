@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../core/utils/responsive_helper.dart';
-import '../../theme/app_theme.dart';
+import 'package:october_scada/core/core.dart';
+import 'package:october_scada/theme/theme.dart';
 import 'dashboard_page.dart';
 import 'station3_page.dart';
 import 'station_page.dart';

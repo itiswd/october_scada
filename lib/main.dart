@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'presentation/pages/main_navigation_page.dart';
-import 'theme/app_theme.dart';
+import 'package:october_scada/presentation/pages/main_navigation_page.dart';
+import 'package:october_scada/theme/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
-import 'package:october_scada/theme/app_theme.dart';
+import 'package:october_scada/theme/theme.dart';
 
-import '../../../core/constants/app_constants.dart';
-import '../../../core/utils/responsive_helper.dart';
+import 'package:october_scada/core/core.dart';
 
 class WeatherWidget extends StatefulWidget {
   const WeatherWidget({super.key});

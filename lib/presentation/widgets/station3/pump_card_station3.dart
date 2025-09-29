@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../core/constants/app_constants.dart';
-import '../../../core/utils/responsive_helper.dart';
-import '../../../theme/app_theme.dart';
+import 'package:october_scada/core/core.dart';
+import 'package:october_scada/theme/theme.dart';
 
 class PumpCardStation3 extends StatelessWidget {
   final int pumpNumber;

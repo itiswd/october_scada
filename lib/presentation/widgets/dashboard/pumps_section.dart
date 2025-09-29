@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/mqtt_topics.dart';
-import '../../../core/utils/responsive_helper.dart';
-import '../../../data/services/mqtt_service.dart';
-import '../pump/pump_column.dart';
+import 'package:october_scada/core/core.dart';
+import 'package:october_scada/data/data.dart';
+import 'package:october_scada/presentation/widgets/widgets.dart';
 
 class PumpsSection extends StatelessWidget {
   final MqttService service;
