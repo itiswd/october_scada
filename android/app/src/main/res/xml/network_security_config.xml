@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- السماح لسيرفر MQTT -->
+        <domain includeSubdomains="true">100.120.50.109</domain>
+        <!-- السماح لـ Weather API -->
+        <domain includeSubdomains="true">api.openweathermap.org</domain>
+        <!-- السماح للشبكة المحلية -->
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">192.168.1.1</domain>
+        <domain includeSubdomains="true">10.0.0.1</domain>
+    </domain-config>
+    
+    <!-- منع HTTP للمواقع الأخرى (للأمان) -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+</network-security-config>
