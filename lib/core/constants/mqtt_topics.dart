@@ -39,9 +39,6 @@ class MqttTopics {
   static const String level3 = 'ANLOG_IN3_LVL3';
   static const String pressure = 'ANLOG_IN5_PRESURE';
   static const String flow = 'ANLOG_IN6_FLOW';
-  // ===== Station3 =====
-
-  // Power sources
   static const String supply1 = 'supply1';
   static const String supply2 = 'supply2';
   static const String generator = 'generator';
