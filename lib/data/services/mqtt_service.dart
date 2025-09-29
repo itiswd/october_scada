@@ -1,7 +1,5 @@
-// ======================
-// Unified MQTT Service
-// ======================
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -9,21 +7,12 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttService extends ChangeNotifier {
   final client = MqttServerClient('100.120.50.109', 'flutter_scada');
-  final String station; // station1 أو station3
+  final String baseTopic = 'station1/#';
   bool connected = false;
-
-  // Station1 data
   Map<String, bool> inputs = {};
   Map<String, double> holdingRegisters = {};
-
-  // Station3 data
-  Map<String, bool> powerSources = {};
-  Map<String, double> pressureSensors = {};
-  Map<String, bool> pumpsStatus = {};
-  Map<String, int> pumpsTime = {};
-  Map<String, double> tankData = {};
-
-  MqttService({required this.station});
+  StreamSubscription<List<MqttReceivedMessage<MqttMessage>>>? _subscription;
+  bool _isSubscribed = false;
 
   Future<void> connect() async {
     client.port = 1883;
@@ -39,7 +28,7 @@ class MqttService extends ChangeNotifier {
     try {
       await client.connect();
     } catch (e) {
-      debugPrint("❌ $station Connection error: $e");
+      debugPrint("❌ Connection error: $e");
       client.disconnect();
       // Retry initial connection after a short delay
       Future.delayed(const Duration(seconds: 5), () {
@@ -50,21 +39,21 @@ class MqttService extends ChangeNotifier {
     }
 
     if (client.connectionStatus?.state == MqttConnectionState.connected) {
-      client.subscribe('$station/#', MqttQos.atMostOnce);
-      client.updates?.listen(_onMessage);
+      _subscribeAndListen();
     }
   }
 
   void _onConnected() {
     connected = true;
     notifyListeners();
-    debugPrint('🟢 MQTT $station Connected');
+    debugPrint('🟢 MQTT Connected');
+    _subscribeAndListen();
   }
 
   void _onDisconnected() {
     connected = false;
     notifyListeners();
-    debugPrint('🔴 MQTT $station Disconnected');
+    debugPrint('🔴 MQTT Disconnected');
   }
 
   void _onAutoReconnect() {
@@ -73,6 +62,7 @@ class MqttService extends ChangeNotifier {
 
   void _onAutoReconnected() {
     debugPrint('✅ MQTT Auto reconnected');
+    _subscribeAndListen();
   }
 
   void _onMessage(List<MqttReceivedMessage<MqttMessage>> event) {
@@ -81,16 +71,21 @@ class MqttService extends ChangeNotifier {
       recMess.payload.message,
     );
 
+    final topic = event[0].topic;
+    dynamic value;
     try {
-      final decoded = jsonDecode(payload) as Map<String, dynamic>;
-      final topic = event[0].topic;
-      final value = decoded['value'];
-
-      _processMessage(topic, value);
-      notifyListeners();
-    } catch (e) {
-      debugPrint("❌ Error decoding $station message: $e | payload=$payload");
+      final decoded = jsonDecode(payload);
+      if (decoded is Map<String, dynamic> && decoded.containsKey('value')) {
+        value = decoded['value'];
+      } else {
+        value = decoded;
+      }
+    } catch (_) {
+      value = _coercePrimitive(payload);
     }
+
+    _processMessage(topic, value);
+    notifyListeners();
   }
 
   void _processMessage(String topic, dynamic value) {
@@ -99,51 +94,65 @@ class MqttService extends ChangeNotifier {
       final category = parts[1];
       final key = parts[2];
 
-<<<<<<< HEAD
-      if (station == "station1") {
-        if (category == "inputs") {
-          inputs[key] = value as bool;
-        } else if (category == "holding_resgisters") {
-          holdingRegisters[key] = (value is int)
-              ? value.toDouble()
-              : (value as num).toDouble();
-        }
-      } else if (station == "station3") {
-        switch (category) {
-          case "power":
-            powerSources[key] = value as bool;
-            break;
-          case "pressure_sensors":
-            pressureSensors[key] = (value is int)
-                ? value.toDouble()
-                : (value as num).toDouble();
-            break;
-          case "pumps_status":
-            if (key.contains('_flow') || key.contains('_level')) {
-              tankData[key] = (value is int)
-                  ? value.toDouble()
-                  : (value as num).toDouble();
-            } else {
-              pumpsStatus[key] = value as bool;
-            }
-            break;
-          case "pumps_time":
-            pumpsTime[key] = value as int;
-            break;
-        }
-=======
       if (category == "inputs") {
-        inputs[key] = value as bool;
+        inputs[key] = _toBool(value);
       } else if (category == "holding_registers" || category == "holding_resgisters") {
-        holdingRegisters[key] = (value is int)
-            ? value.toDouble()
-            : (value as num).toDouble();
->>>>>>> 8982c0ae1770e125c01d02422f64aa458af45015
+        holdingRegisters[key] = _toDouble(value);
       }
     }
   }
 
   void disconnect() {
+    _subscription?.cancel();
+    _subscription = null;
+    _isSubscribed = false;
     client.disconnect();
+  }
+
+  void _subscribeAndListen() {
+    if (!_isSubscribed) {
+      client.subscribe(baseTopic, MqttQos.atMostOnce);
+      _subscription ??= client.updates?.listen(_onMessage);
+      _isSubscribed = true;
+    }
+  }
+
+  bool _toBool(dynamic v) {
+    if (v is bool) return v;
+    if (v is num) return v != 0;
+    if (v is String) {
+      final t = v.trim().toLowerCase();
+      if (t == 'true' || t == '1' || t == 'on') return true;
+      if (t == 'false' || t == '0' || t == 'off') return false;
+    }
+    return false;
+  }
+
+  double _toDouble(dynamic v) {
+    if (v is double) return v;
+    if (v is int) return v.toDouble();
+    if (v is num) return v.toDouble();
+    if (v is String) {
+      final parsed = double.tryParse(v.trim());
+      return parsed ?? 0.0;
+    }
+    return 0.0;
+  }
+
+  dynamic _coercePrimitive(String payload) {
+    final t = payload.trim();
+    final lower = t.toLowerCase();
+    if (lower == 'true' || lower == 'false') {
+      return lower == 'true';
+    }
+    final asNum = num.tryParse(t);
+    if (asNum != null) return asNum;
+    return t;
+  }
+
+  @override
+  void dispose() {
+    disconnect();
+    super.dispose();
   }
 }

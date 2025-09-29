@@ -36,16 +36,28 @@ class _WeatherWidgetState extends State<WeatherWidget> {
         "&appid=${AppConstants.weatherApiKey}";
 
     try {
-      final response = await http.get(Uri.parse(url));
+      final response = await http
+          .get(Uri.parse(url))
+          .timeout(const Duration(seconds: 6));
 
       if (response.statusCode == 200) {
-        final data = json.decode(response.body);
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        final main = data['main'] as Map<String, dynamic>?;
+        final weatherList = data['weather'] as List?;
+        final windMap = data['wind'] as Map<String, dynamic>?;
+
+        final tempValue = (main?['temp'] as num?)?.round();
+        final humidityValue = (main?['humidity'] as num?)?.toInt();
+        final conditionText = (weatherList != null && weatherList.isNotEmpty)
+            ? (weatherList[0]['main'] as String? ?? 'N/A')
+            : 'N/A';
+        final windValue = (windMap?['speed'] as num?)?.toDouble() ?? 0.0;
         if (mounted) {
           setState(() {
-            temperature = "${data['main']['temp'].round()}°C";
-            humidity = "${data['main']['humidity']}%";
-            condition = data['weather'][0]['main'];
-            wind = data['wind']['speed'].toStringAsFixed(1);
+            temperature = tempValue != null ? "$tempValue°C" : "--";
+            humidity = humidityValue != null ? "$humidity%" : "--";
+            condition = conditionText;
+            wind = windValue.toStringAsFixed(1);
             isLoading = false;
           });
         }
