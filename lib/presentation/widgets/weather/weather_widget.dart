@@ -3,9 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
-import 'package:october_scada/theme/theme.dart';
-
 import 'package:october_scada/core/core.dart';
+import 'package:october_scada/theme/theme.dart';
 
 class WeatherWidget extends StatefulWidget {
   const WeatherWidget({super.key});
@@ -83,8 +82,11 @@ class _WeatherWidgetState extends State<WeatherWidget> {
     final isMobile = ResponsiveHelper.isMobile(context);
 
     return Container(
-      height: isMobile ? 100.h : 240.h,
-      color: AppTheme.darkerBackground,
+      decoration: BoxDecoration(
+        color: AppTheme.darkerBackground,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      padding: EdgeInsets.all(isMobile ? 16 : 20),
       child: isLoading
           ? _buildLoadingState(isMobile)
           : _buildWeatherData(isMobile),
@@ -102,7 +104,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
 
   Widget _buildWeatherData(bool isMobile) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _buildWeatherItem(
           'assets/images/icon_temp.png',
@@ -110,21 +112,18 @@ class _WeatherWidgetState extends State<WeatherWidget> {
           Colors.red,
           isMobile,
         ),
-        SizedBox(width: 56.w),
         _buildWeatherItem(
           'assets/images/icon_humidity.png',
           humidity,
           Colors.blue,
           isMobile,
         ),
-        SizedBox(width: 56.w),
         _buildWeatherItem(
           'assets/images/icon_sunny.png',
           condition,
           Colors.orange,
           isMobile,
         ),
-        SizedBox(width: 56.w),
         _buildWeatherItem(
           'assets/images/icon_wind.png',
           wind,

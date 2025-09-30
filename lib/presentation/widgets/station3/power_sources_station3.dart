@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/theme/theme.dart';
 
@@ -30,12 +29,22 @@ class PowerSourcesStation3 extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Power Sources',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: isMobile ? 16.sp : 20.sp,
-              fontWeight: FontWeight.bold,
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 10.w : 20.w,
+              vertical: isMobile ? 4.h : 6.h,
+            ),
+            decoration: BoxDecoration(
+              color: AppTheme.backgroundColor.withAlpha(25),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Text(
+              'Power Sources',
+              style: TextStyle(
+                fontSize: isMobile ? 10.sp : 16.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
             ),
           ),
           SizedBox(height: isMobile ? 12.h : 16.h),
@@ -89,7 +98,7 @@ class PowerSourcesStation3 extends StatelessWidget {
           title,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: isMobile ? 12.sp : 16.sp,
+            fontSize: isMobile ? 14.sp : 20.sp,
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),

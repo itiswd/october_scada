@@ -1,53 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:october_scada/core/core.dart';
 import 'package:october_scada/theme/theme.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-import 'package:october_scada/core/core.dart';
-import 'package:october_scada/presentation/widgets/widgets.dart';
-
-class WeatherAndGaugesSection extends StatelessWidget {
+class GaugesSection extends StatelessWidget {
   final double bar;
   final double ls;
+  final String? title;
 
-  const WeatherAndGaugesSection({
+  const GaugesSection({
     super.key,
     required this.bar,
     required this.ls,
+    this.title,
   });
 
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
 
-    return Column(
-      children: [
-        // Weather Section
-        const WeatherWidget(),
-        SizedBox(height: 0.5.h),
-        // Gauges Section
-        _buildGaugesSection(isMobile),
-      ],
-    );
+    return _buildGaugesSection(isMobile);
   }
 
   Widget _buildGaugesSection(bool isMobile) {
     return Container(
-      height: isMobile ? 160.h : 300.h,
-      padding: EdgeInsets.all(isMobile ? 12.w : 16.w),
+      padding: EdgeInsets.all(isMobile ? 16.w : 20.w),
       decoration: BoxDecoration(
         color: AppTheme.darkerBackground,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24.r)),
+        borderRadius: BorderRadius.circular(24.r),
       ),
-      child: isMobile ? _buildMobileGauges() : _buildDesktopGauges(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title != null) ...[
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: isMobile ? 10.w : 20.w,
+                vertical: isMobile ? 4.h : 6.h,
+              ),
+              decoration: BoxDecoration(
+                color: AppTheme.backgroundColor.withAlpha(25),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Text(
+                title!,
+                style: TextStyle(
+                  fontSize: isMobile ? 10.sp : 16.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: isMobile ? 12.h : 16.h),
+          ],
+          isMobile ? _buildMobileGauges() : _buildDesktopGauges(),
+          if (title != null) SizedBox(height: 8.h),
+        ],
+      ),
     );
   }
 
   Widget _buildMobileGauges() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 400), true),
+        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 600), true),
         _buildGaugeItem(bar, "BAR", _calculatePercent(bar, 10), true),
       ],
     );
@@ -55,10 +73,9 @@ class WeatherAndGaugesSection extends StatelessWidget {
 
   Widget _buildDesktopGauges() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 400), false),
-        SizedBox(width: 56.w),
+        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 600), false),
         _buildGaugeItem(bar, "BAR", _calculatePercent(bar, 10), false),
       ],
     );

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
-
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/theme/theme.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class PressureSensorsWidget extends StatelessWidget {
-  final double sensor1;
-  final double sensor2;
+class PressureAndFlowSensorsWidget extends StatelessWidget {
+  final double pressure;
+  final double flow;
 
-  const PressureSensorsWidget({
+  const PressureAndFlowSensorsWidget({
     super.key,
-    required this.sensor1,
-    required this.sensor2,
+    required this.pressure,
+    required this.flow,
   });
 
   @override
@@ -29,20 +28,30 @@ class PressureSensorsWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Pressure Sensors',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: isMobile ? 16.sp : 20.sp,
-              fontWeight: FontWeight.bold,
+          Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: isMobile ? 10.w : 20.w,
+              vertical: isMobile ? 4.h : 6.h,
+            ),
+            decoration: BoxDecoration(
+              color: AppTheme.backgroundColor.withAlpha(25),
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: Text(
+              'Pressure and Flow',
+              style: TextStyle(
+                fontSize: isMobile ? 10.sp : 16.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
             ),
           ),
-          SizedBox(height: isMobile ? 16.h : 20.h),
+          SizedBox(height: isMobile ? 12.h : 16.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildPressureGauge('Sensor 1', sensor1, isMobile),
-              _buildPressureGauge('Sensor 2', sensor2, isMobile),
+              _buildPressureGauge('Sensor 1', pressure, isMobile),
+              _buildPressureGauge('Sensor 2', flow, isMobile),
             ],
           ),
         ],

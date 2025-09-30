@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/data/data.dart';
 import 'package:october_scada/theme/theme.dart';
 
 class TransformersSection extends StatelessWidget {
+  final String? title;
   final MqttService service;
 
-  const TransformersSection({super.key, required this.service});
+  const TransformersSection({super.key, required this.service, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -16,19 +16,44 @@ class TransformersSection extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      height: isMobile ? 140.h : 300.h,
       decoration: BoxDecoration(
         color: AppTheme.darkerBackground,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        borderRadius: BorderRadius.circular(24.r),
       ),
       child: Padding(
-        padding: EdgeInsets.all(isMobile ? 12.w : 20.w),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        padding: EdgeInsets.all(isMobile ? 16.w : 20.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(child: _buildGenerator()),
-            Expanded(child: _buildTransformer1()),
-            Expanded(child: _buildTransformer2()),
+            if (title != null) ...[
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: isMobile ? 10.w : 20.w,
+                  vertical: isMobile ? 4.h : 6.h,
+                ),
+                decoration: BoxDecoration(
+                  color: AppTheme.backgroundColor.withAlpha(25),
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Text(
+                  title!,
+                  style: TextStyle(
+                    fontSize: isMobile ? 10.sp : 16.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(height: isMobile ? 8.h : 16.h),
+            ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(child: _buildGenerator()),
+                Expanded(child: _buildTransformer1()),
+                Expanded(child: _buildTransformer2()),
+              ],
+            ),
           ],
         ),
       ),

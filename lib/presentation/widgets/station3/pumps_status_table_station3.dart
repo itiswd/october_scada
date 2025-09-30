@@ -16,7 +16,7 @@ class PumpsStatusTableStation3 extends StatelessWidget {
         color: AppTheme.darkerBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
-      padding: EdgeInsets.all(12.r),
+      clipBehavior: Clip.antiAlias,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
@@ -25,7 +25,7 @@ class PumpsStatusTableStation3 extends StatelessWidget {
             DataColumn(label: Text('Running')),
             DataColumn(label: Text('Auto')),
             DataColumn(label: Text('Remote')),
-            DataColumn(label: Text('HH:MM:SS')),
+            DataColumn(label: Text('Working Time')),
           ],
           rows: List.generate(6, (index) {
             final n = index + 1;
@@ -74,10 +74,7 @@ class PumpsStatusTableStation3 extends StatelessWidget {
       ),
       child: Text(
         value ? 'ON' : 'OFF',
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
     );
   }

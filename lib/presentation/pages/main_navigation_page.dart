@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/theme/theme.dart';
-import 'dashboard_page.dart';
+
+import 'station1_page.dart';
 import 'station3_page.dart';
 import 'station_page.dart';
 
@@ -25,7 +25,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
   void initState() {
     super.initState();
     _pages = [
-      const DashboardPage(), // Station 1 - المحطة الأساسية
+      const Station1Page(), // Station 1 - المحطة الأساسية
       const StationPage(stationNumber: 2),
       const Station3Page(), // Station 3 - مع البيانات الكاملة
       const StationPage(stationNumber: 4),

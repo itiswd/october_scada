@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/theme/theme.dart';
 
@@ -191,17 +190,12 @@ class _StationTankCardState extends State<StationTankCard3> {
 
   Widget _buildMetrics(bool isMobile) {
     if (isMobile) {
-      return Column(
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildFlowWidget(isMobile),
-              _buildCapacityWidget(isMobile),
-            ],
-          ),
-          SizedBox(height: 16.h),
           _buildLevelsGrid(isMobile),
+          _buildFlowWidget(isMobile),
+          _buildCapacityWidget(isMobile),
         ],
       );
     } else {
@@ -271,7 +265,7 @@ class _StationTankCardState extends State<StationTankCard3> {
           label,
           style: TextStyle(
             color: Colors.grey,
-            fontSize: isMobile ? 12.sp : 20.sp,
+            fontSize: isMobile ? 14.sp : 20.sp,
           ),
         ),
         Text(
@@ -279,7 +273,7 @@ class _StationTankCardState extends State<StationTankCard3> {
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: isMobile ? 12.sp : 20.sp,
+            fontSize: isMobile ? 14.sp : 20.sp,
           ),
         ),
       ],
@@ -288,8 +282,8 @@ class _StationTankCardState extends State<StationTankCard3> {
 
   Widget _buildLevelBars(bool isMobile) {
     return SizedBox(
-      height: isMobile ? 200.h : 352.h,
-      child: Stack(children: [_buildGridLines(), _buildBars(isMobile)]),
+      height: isMobile ? 160.h : 320.h,
+      child: _buildBars(isMobile),
     );
   }
 
@@ -299,7 +293,7 @@ class _StationTankCardState extends State<StationTankCard3> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(
           4,
-          (_) => Divider(thickness: 0.5, color: Colors.white.withAlpha(50)),
+          (_) => Divider(thickness: 0.5, color: Colors.white.withAlpha(75)),
         ),
       ),
     );
@@ -354,7 +348,7 @@ class _StationTankCardState extends State<StationTankCard3> {
     int index,
   ) {
     final percent = (level / widget.capacity) * 100;
-    final barWidth = isMobile ? 350.w : 1000.w;
+    final barWidth = isMobile ? 300.w : 600.w;
     final barHeight = isMobile ? 160.h : 320.h;
     final fillHeight = (level / widget.capacity) * (isMobile ? 160.h : 320.h);
 
@@ -404,6 +398,7 @@ class _StationTankCardState extends State<StationTankCard3> {
                   ),
                 ),
               ),
+              _buildGridLines(),
             ],
           ),
         ),

@@ -6,8 +6,8 @@ import 'package:october_scada/data/services/mqtt_service.dart';
 import 'package:october_scada/domain/domain.dart';
 import 'package:october_scada/presentation/widgets/widgets.dart';
 
-class DashboardPage extends ConsumerWidget {
-  const DashboardPage({super.key});
+class Station1Page extends ConsumerWidget {
+  const Station1Page({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,10 +64,11 @@ class DashboardPage extends ConsumerWidget {
 
         // Transformers Section
         TransformersSection(service: service),
-        SizedBox(height: 0.5.h),
-
+        SizedBox(height: 8.h),
+        const WeatherWidget(),
+        SizedBox(height: 8.h),
         // Weather and Gauges
-        WeatherAndGaugesSection(
+        GaugesSection(
           ls: service.holdingRegisters[MqttTopics.flow] ?? 0,
           bar: service.holdingRegisters[MqttTopics.pressure] ?? 0,
         ),
@@ -100,8 +101,10 @@ class DashboardPage extends ConsumerWidget {
             children: [
               SizedBox(height: isDesktop ? 12.h : 0),
               TransformersSection(service: service),
-              SizedBox(height: 0.5.h),
-              WeatherAndGaugesSection(
+              SizedBox(height: 8.h),
+              const WeatherWidget(),
+              SizedBox(height: 8.h),
+              GaugesSection(
                 ls: service.holdingRegisters[MqttTopics.flow] ?? 0,
                 bar: service.holdingRegisters[MqttTopics.pressure] ?? 0,
               ),
