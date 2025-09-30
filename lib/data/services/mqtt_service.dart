@@ -7,7 +7,7 @@ import 'package:mqtt_client/mqtt_server_client.dart';
 
 class MqttService extends ChangeNotifier {
   final client = MqttServerClient('100.120.50.109', 'flutter_scada');
-  final String baseTopic = 'station1/#';
+  final List<String> baseTopics = ['station1/#', 'station3/#'];
   bool connected = false;
   Map<String, bool> inputs = {};
   Map<String, double> holdingRegisters = {};
@@ -104,7 +104,7 @@ class MqttService extends ChangeNotifier {
         inputs[key] = _toBool(value);
       } else if (category == "holding_registers" || category == "holding_resgisters") {
         holdingRegisters[key] = _toDouble(value);
-      } else if (category == "power_sources") {
+      } else if (category == "power_sources" || category == "power") {
         powerSources[key] = _toBool(value);
       } else if (category == "pressure_sensors") {
         pressureSensors[key] = _toDouble(value);
@@ -113,6 +113,12 @@ class MqttService extends ChangeNotifier {
       } else if (category == "pumps_time") {
         pumpsTime[key] = _toInt(value);
       } else if (category == "tank_data" || category == "tanks") {
+        tankData[key] = _toDouble(value);
+      }
+    } else if (parts.length == 2) {
+      // Handle topics like: station3/tank1_level, station3/tank2_flow, etc.
+      final key = parts[1];
+      if (key.startsWith('tank')) {
         tankData[key] = _toDouble(value);
       }
     }
@@ -127,7 +133,9 @@ class MqttService extends ChangeNotifier {
 
   void _subscribeAndListen() {
     if (!_isSubscribed) {
-      client.subscribe(baseTopic, MqttQos.atMostOnce);
+      for (final t in baseTopics) {
+        client.subscribe(t, MqttQos.atMostOnce);
+      }
       _subscription ??= client.updates?.listen(_onMessage);
       _isSubscribed = true;
     }
