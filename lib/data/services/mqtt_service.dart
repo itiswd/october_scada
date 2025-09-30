@@ -11,6 +11,12 @@ class MqttService extends ChangeNotifier {
   bool connected = false;
   Map<String, bool> inputs = {};
   Map<String, double> holdingRegisters = {};
+  // Additional data groups used across UI pages
+  Map<String, bool> powerSources = {};
+  Map<String, double> pressureSensors = {};
+  Map<String, double> tankData = {};
+  Map<String, bool> pumpsStatus = {};
+  Map<String, int> pumpsTime = {};
   StreamSubscription<List<MqttReceivedMessage<MqttMessage>>>? _subscription;
   bool _isSubscribed = false;
 
@@ -98,6 +104,16 @@ class MqttService extends ChangeNotifier {
         inputs[key] = _toBool(value);
       } else if (category == "holding_registers" || category == "holding_resgisters") {
         holdingRegisters[key] = _toDouble(value);
+      } else if (category == "power_sources") {
+        powerSources[key] = _toBool(value);
+      } else if (category == "pressure_sensors") {
+        pressureSensors[key] = _toDouble(value);
+      } else if (category == "pumps_status") {
+        pumpsStatus[key] = _toBool(value);
+      } else if (category == "pumps_time") {
+        pumpsTime[key] = _toInt(value);
+      } else if (category == "tank_data" || category == "tanks") {
+        tankData[key] = _toDouble(value);
       }
     }
   }
@@ -137,6 +153,16 @@ class MqttService extends ChangeNotifier {
       return parsed ?? 0.0;
     }
     return 0.0;
+  }
+
+  int _toInt(dynamic v) {
+    if (v is int) return v;
+    if (v is num) return v.toInt();
+    if (v is String) {
+      final parsed = int.tryParse(v.trim());
+      return parsed ?? 0;
+    }
+    return 0;
   }
 
   dynamic _coercePrimitive(String payload) {
