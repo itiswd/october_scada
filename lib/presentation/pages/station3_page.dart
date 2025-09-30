@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/domain/domain.dart';
 import 'package:october_scada/presentation/widgets/widgets.dart';
+import 'package:october_scada/presentation/widgets/station3/pumps_section_station3.dart';
 
 class Station3Page extends ConsumerWidget {
   const Station3Page({super.key});
@@ -24,10 +25,17 @@ class Station3Page extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Connection Status
                 if (!isConnected) const ConnectionStatusIndicator(),
 
-                // Main Content
+                // Wave Tank header like Station 1
+                Center(
+                  child: WaveTank(
+                    height: isMobile ? 40.h : 56.h,
+                    waveAmplitude: isMobile ? 4.0 : 6.0,
+                    waveSpeed: 1.0,
+                  ),
+                ),
+
                 if (isMobile) ...[
                   _buildMobileLayout(service),
                 ] else ...[
@@ -44,15 +52,15 @@ class Station3Page extends ConsumerWidget {
   Widget _buildMobileLayout(service) {
     return Column(
       children: [
-        // Pumps Section
-        _buildPumpsGrid(service, true),
-        SizedBox(height: 16.h),
+        // Pumps Section styled like Station 1
+        PumpsSectionStation3(service: service),
+        SizedBox(height: 12.h),
 
         // Tanks
         _buildTank1(service, true),
         SizedBox(height: 8.h),
         _buildTank2(service, true),
-        SizedBox(height: 16.h),
+        SizedBox(height: 12.h),
 
         // Power Sources
         PowerSourcesStation3(
@@ -80,7 +88,7 @@ class Station3Page extends ConsumerWidget {
           flex: 5,
           child: Column(
             children: [
-              _buildPumpsGrid(service, false),
+              PumpsSectionStation3(service: service),
               SizedBox(height: 16.h),
               _buildTank1(service, false),
               SizedBox(height: 8.h),
@@ -115,24 +123,7 @@ class Station3Page extends ConsumerWidget {
     );
   }
 
-  Widget _buildPumpsGrid(service, bool isMobile) {
-    return Wrap(
-      spacing: isMobile ? 8.w : 16.w,
-      runSpacing: isMobile ? 8.h : 16.h,
-      children: List.generate(6, (index) {
-        final pumpNum = index + 1;
-        return PumpCardStation3(
-          pumpNumber: pumpNum,
-          isRunning: service.pumpsStatus['pump${pumpNum}_is_runnung'] ?? false,
-          isAuto: service.pumpsStatus['pump${pumpNum}_is_auto'] ?? false,
-          isRemote: service.pumpsStatus['pump${pumpNum}_is_remote'] ?? false,
-          hours: service.pumpsTime['pump${pumpNum}_hour'] ?? 0,
-          minutes: service.pumpsTime['pump${pumpNum}_minute'] ?? 0,
-          seconds: service.pumpsTime['pump${pumpNum}_second'] ?? 0,
-        );
-      }),
-    );
-  }
+  // Replaced with PumpsSectionStation3
 
   Widget _buildTank1(service, bool isMobile) {
     final level = service.tankData[MqttTopics.tank1Level] ?? 0.0;
