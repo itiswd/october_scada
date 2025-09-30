@@ -5,6 +5,8 @@ import 'package:october_scada/core/core.dart';
 import 'package:october_scada/domain/domain.dart';
 import 'package:october_scada/presentation/widgets/widgets.dart';
 import 'package:october_scada/presentation/widgets/station3/pumps_section_station3.dart';
+import 'package:october_scada/presentation/widgets/station3/pump_group_station3.dart';
+import 'package:october_scada/presentation/widgets/station3/pumps_status_table_station3.dart';
 
 class Station3Page extends ConsumerWidget {
   const Station3Page({super.key});
@@ -52,14 +54,18 @@ class Station3Page extends ConsumerWidget {
   Widget _buildMobileLayout(service) {
     return Column(
       children: [
-        // Pumps Section styled like Station 1
-        PumpsSectionStation3(service: service),
+        // Pumps grouped 3 per tank
+        PumpGroupWithTankStation3(
+          service: service,
+          pumpNumbers: const [1, 2, 3],
+          tankNumber: 1,
+        ),
         SizedBox(height: 12.h),
-
-        // Tanks
-        _buildTank1(service, true),
-        SizedBox(height: 8.h),
-        _buildTank2(service, true),
+        PumpGroupWithTankStation3(
+          service: service,
+          pumpNumbers: const [4, 5, 6],
+          tankNumber: 2,
+        ),
         SizedBox(height: 12.h),
 
         // Power Sources
@@ -75,6 +81,9 @@ class Station3Page extends ConsumerWidget {
           sensor1: service.pressureSensors[MqttTopics.pressureSensor1] ?? 0,
           sensor2: service.pressureSensors[MqttTopics.pressureSensor2] ?? 0,
         ),
+        SizedBox(height: 12.h),
+        // Pumps detailed table
+        PumpsStatusTableStation3(service: service),
       ],
     );
   }
@@ -88,11 +97,17 @@ class Station3Page extends ConsumerWidget {
           flex: 5,
           child: Column(
             children: [
-              PumpsSectionStation3(service: service),
+              PumpGroupWithTankStation3(
+                service: service,
+                pumpNumbers: const [1, 2, 3],
+                tankNumber: 1,
+              ),
               SizedBox(height: 16.h),
-              _buildTank1(service, false),
-              SizedBox(height: 8.h),
-              _buildTank2(service, false),
+              PumpGroupWithTankStation3(
+                service: service,
+                pumpNumbers: const [4, 5, 6],
+                tankNumber: 2,
+              ),
             ],
           ),
         ),
@@ -116,6 +131,8 @@ class Station3Page extends ConsumerWidget {
                 sensor2:
                     service.pressureSensors[MqttTopics.pressureSensor2] ?? 0,
               ),
+              SizedBox(height: 16.h),
+              PumpsStatusTableStation3(service: service),
             ],
           ),
         ),
