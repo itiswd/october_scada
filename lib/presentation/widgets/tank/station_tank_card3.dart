@@ -348,7 +348,7 @@ class _StationTankCardState extends State<StationTankCard3> {
     int index,
   ) {
     final percent = (level / widget.capacity) * 100;
-    final barWidth = isMobile ? 300.w : 600.w;
+    final barWidth = isMobile ? 300.w : 550.w;
     final barHeight = isMobile ? 160.h : 320.h;
     final fillHeight = (level / widget.capacity) * (isMobile ? 160.h : 320.h);
 

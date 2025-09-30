@@ -20,8 +20,12 @@ class PumpsStatusTableStation3 extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: DataTable(
-          columns: const [
-            DataColumn(label: Text('Pump')),
+          columns: [
+            DataColumn(
+              headingRowAlignment: MainAxisAlignment.center,
+
+              label: Text('Pump'),
+            ),
             DataColumn(label: Text('Running')),
             DataColumn(label: Text('Auto')),
             DataColumn(label: Text('Remote')),

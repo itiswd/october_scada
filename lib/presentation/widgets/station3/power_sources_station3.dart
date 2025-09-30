@@ -47,7 +47,7 @@ class PowerSourcesStation3 extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: isMobile ? 12.h : 16.h),
+          SizedBox(height: isMobile ? 14.h : 20.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -74,6 +74,7 @@ class PowerSourcesStation3 extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(height: isMobile ? 12.h : 16.h),
         ],
       ),
     );

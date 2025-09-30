@@ -65,8 +65,8 @@ class GaugesSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 600), true),
-        _buildGaugeItem(bar, "BAR", _calculatePercent(bar, 10), true),
+        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, ls + 100), true),
+        _buildGaugeItem(bar, "BAR", _calculatePercent(bar, bar + 2), true),
       ],
     );
   }
@@ -75,8 +75,8 @@ class GaugesSection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, 600), false),
-        _buildGaugeItem(bar, "BAR", _calculatePercent(bar, 10), false),
+        _buildGaugeItem(ls, "L/S", _calculatePercent(ls, ls + 100), false),
+        _buildGaugeItem(bar, "BAR", _calculatePercent(bar, bar + 2), false),
       ],
     );
   }
