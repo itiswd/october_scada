@@ -41,7 +41,7 @@ class Station3Page extends ConsumerWidget {
     );
   }
 
-  Widget _buildMobileLayout(service) {
+  Widget _buildMobileLayout(dynamic service) {
     return Column(
       children: [
         // Pumps Section
@@ -71,7 +71,7 @@ class Station3Page extends ConsumerWidget {
     );
   }
 
-  Widget _buildDesktopLayout(service) {
+  Widget _buildDesktopLayout(dynamic service) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -115,7 +115,7 @@ class Station3Page extends ConsumerWidget {
     );
   }
 
-  Widget _buildPumpsGrid(service, bool isMobile) {
+  Widget _buildPumpsGrid(dynamic service, bool isMobile) {
     return Wrap(
       spacing: isMobile ? 8.w : 16.w,
       runSpacing: isMobile ? 8.h : 16.h,
@@ -134,7 +134,7 @@ class Station3Page extends ConsumerWidget {
     );
   }
 
-  Widget _buildTank1(service, bool isMobile) {
+  Widget _buildTank1(dynamic service, bool isMobile) {
     final level = service.tankData[MqttTopics.tank1Level] ?? 0.0;
     return StationTankCard3(
       title: "Tank 1",
@@ -144,7 +144,7 @@ class Station3Page extends ConsumerWidget {
     );
   }
 
-  Widget _buildTank2(service, bool isMobile) {
+  Widget _buildTank2(dynamic service, bool isMobile) {
     final level = service.tankData[MqttTopics.tank2Level] ?? 0.0;
     return StationTankCard3(
       title: "Tank 2",

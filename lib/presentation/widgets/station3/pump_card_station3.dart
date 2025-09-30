@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' show FontFeature;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:october_scada/core/core.dart';

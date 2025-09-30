@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:october_scada/core/core.dart';
+import 'package:october_scada/data/services/mqtt_service.dart';
 import 'package:october_scada/domain/domain.dart';
 import 'package:october_scada/presentation/widgets/widgets.dart';
 
@@ -51,7 +52,7 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildMobileLayout(service) {
+  Widget _buildMobileLayout(MqttService service) {
     return Column(
       children: [
         // Pumps Section
@@ -74,7 +75,7 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildDesktopLayout(service, bool isDesktop) {
+  Widget _buildDesktopLayout(MqttService service, bool isDesktop) {
     return Row(
       children: [
         // Left Column - Pumps + Tank
@@ -111,7 +112,7 @@ class DashboardPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildStationTank(service) {
+  Widget _buildStationTank(MqttService service) {
     return StationTankCard(
       title: "Station 1 Tank",
       flow: service.holdingRegisters[MqttTopics.flow] ?? 0,
