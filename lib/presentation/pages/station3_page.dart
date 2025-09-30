@@ -63,7 +63,7 @@ class Station3Page extends ConsumerWidget {
         GaugesSection(
           title: 'Tank 1',
           bar: service.pressureSensors[MqttTopics.pressureSensor1] ?? 0,
-          ls: service.pressureSensors[MqttTopics.tank1Flow] ?? 0,
+          ls: service.tankData[MqttTopics.tank1Flow] ?? 0,
         ),
         SizedBox(height: 8.h),
         // Wave Tank header like Station 1
@@ -85,7 +85,7 @@ class Station3Page extends ConsumerWidget {
         GaugesSection(
           title: 'Tank 2',
           bar: service.pressureSensors[MqttTopics.pressureSensor2] ?? 0,
-          ls: service.pressureSensors[MqttTopics.tank2Flow] ?? 0,
+          ls: service.tankData[MqttTopics.tank2Flow] ?? 0,
         ),
         SizedBox(height: 8.h),
         // Power Sources
