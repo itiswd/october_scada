@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/domain/domain.dart';
-import 'package:october_scada/presentation/widgets/station3/pump_group_station3.dart';
-import 'package:october_scada/presentation/widgets/station3/pumps_status_table_station3.dart';
+import 'package:october_scada/presentation/stations/station3/widgets.dart';
 import 'package:october_scada/presentation/widgets/widgets.dart';
 
 class Station3Page extends ConsumerWidget {

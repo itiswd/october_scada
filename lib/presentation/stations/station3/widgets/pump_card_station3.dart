@@ -41,7 +41,6 @@ class PumpCardStation3 extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Pump number
           Text(
             'Pump $pumpNumber',
             style: TextStyle(
@@ -51,16 +50,12 @@ class PumpCardStation3 extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.h),
-
-          // Pump image
           Image.asset(
             isRunning ? AppConstants.pumpOnImage : AppConstants.pumpOffImage,
             width: isMobile ? 48.w : 80.w,
             height: isMobile ? 48.w : 80.w,
           ),
           SizedBox(height: 8.h),
-
-          // Status indicators
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -70,8 +65,6 @@ class PumpCardStation3 extends StatelessWidget {
             ],
           ),
           SizedBox(height: 8.h),
-
-          // Runtime
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: isMobile ? 6.w : 8.w,
@@ -82,9 +75,7 @@ class PumpCardStation3 extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: Text(
-              '${hours.toString().padLeft(2, '0')}:'
-              '${minutes.toString().padLeft(2, '0')}:'
-              '${seconds.toString().padLeft(2, '0')}',
+              '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: isMobile ? 10.sp : 14.sp,
