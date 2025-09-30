@@ -3,10 +3,7 @@ export 'common/gauges_section.dart';
 export 'common/pumps_section.dart';
 export 'common/responsive_layout.dart';
 export 'pump/pump_column.dart';
-export 'station1/transformers_section.dart';
-export 'station3/power_sources_station3.dart';
-export 'station3/pressure_sensors_widget.dart';
-export 'station3/pump_card_station3.dart';
+// Station-specific widgets are exported via station barrels
 export 'tank/station_tank_card.dart';
 export 'tank/station_tank_card3.dart';
 export 'weather/wave_tank.dart';

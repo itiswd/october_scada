@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/data/data.dart';
-import 'package:october_scada/presentation/widgets/station3/pump_card_station3.dart';
+import 'package:october_scada/presentation/stations/station3/widgets/pump_card_station3.dart';
 import 'package:october_scada/theme/theme.dart';
 
 class PumpsSectionStation3 extends StatelessWidget {
@@ -52,4 +52,3 @@ class PumpsSectionStation3 extends StatelessWidget {
     );
   }
 }
-

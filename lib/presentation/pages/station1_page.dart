@@ -5,6 +5,7 @@ import 'package:october_scada/core/core.dart';
 import 'package:october_scada/data/services/mqtt_service.dart';
 import 'package:october_scada/domain/domain.dart';
 import 'package:october_scada/presentation/widgets/widgets.dart';
+import 'package:october_scada/presentation/stations/station1/widgets.dart' as st1;
 
 class Station1Page extends ConsumerWidget {
   const Station1Page({super.key});
@@ -63,7 +64,7 @@ class Station1Page extends ConsumerWidget {
         SizedBox(height: 8.h),
 
         // Transformers Section
-        TransformersSection(service: service),
+        st1.TransformersSection(service: service),
         SizedBox(height: 8.h),
         const WeatherWidget(),
         SizedBox(height: 8.h),
@@ -100,7 +101,7 @@ class Station1Page extends ConsumerWidget {
           child: Column(
             children: [
               SizedBox(height: isDesktop ? 12.h : 0),
-              TransformersSection(service: service),
+              st1.TransformersSection(service: service),
               SizedBox(height: 8.h),
               const WeatherWidget(),
               SizedBox(height: 8.h),
