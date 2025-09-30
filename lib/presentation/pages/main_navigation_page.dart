@@ -117,6 +117,9 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
         return const Station1Page();
       case 3:
         return const Station3Page();
+      case 4:
+        // For Station 4 we can reuse Station 3 components pattern
+        return const Station3Page();
       default:
         return StationPage(stationNumber: stationNumber);
     }
