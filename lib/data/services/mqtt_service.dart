@@ -4,10 +4,19 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:october_scada/features/stations/domain/station_registry.dart';
 
 class MqttService extends ChangeNotifier {
-  final client = MqttServerClient('100.120.50.109', 'flutter_scada');
-  final List<String> baseTopics = ['station1/#', 'station3/#'];
+  final List<String> baseTopics;
+  final MqttServerClient client;
+  
+  MqttService({List<String>? topics, String? host})
+      : baseTopics = topics ??
+            StationRegistry
+                .all()
+                .expand((c) => c.subscribeTopics)
+                .toList(),
+        client = MqttServerClient(host ?? '100.120.50.109', 'flutter_scada');
   bool connected = false;
   Map<String, bool> inputs = {};
   Map<String, double> holdingRegisters = {};

@@ -8,6 +8,7 @@ import 'package:october_scada/theme/theme.dart';
 import 'station1_page.dart';
 import 'station3_page.dart';
 import 'station_page.dart';
+import 'package:october_scada/features/stations/domain/station_registry.dart';
 
 class MainNavigationPage extends ConsumerStatefulWidget {
   const MainNavigationPage({super.key});
@@ -20,18 +21,14 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
   int _currentIndex = 0;
 
   late final List<Widget> _pages;
+  late final List<String> _labels;
 
   @override
   void initState() {
     super.initState();
-    _pages = [
-      const Station1Page(), // Station 1 - المحطة الأساسية
-      const StationPage(stationNumber: 2),
-      const Station3Page(), // Station 3 - مع البيانات الكاملة
-      const StationPage(stationNumber: 4),
-      const StationPage(stationNumber: 5),
-      const StationPage(stationNumber: 6),
-    ];
+    final configs = StationRegistry.all();
+    _pages = configs.map((c) => _buildPageForStation(c.id.value)).toList();
+    _labels = configs.map((c) => c.name).toList();
   }
 
   @override
@@ -63,14 +60,10 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(0, 'Station 1', isMobile),
-              _buildNavItem(1, 'Station 2', isMobile),
-              _buildNavItem(2, 'Station 3', isMobile),
-              _buildNavItem(3, 'Station 4', isMobile),
-              _buildNavItem(4, 'Station 5', isMobile),
-              _buildNavItem(5, 'Station 6', isMobile),
-            ],
+            children: List.generate(
+              _labels.length,
+              (i) => _buildNavItem(i, _labels[i], isMobile),
+            ),
           ),
         ),
       ),
@@ -116,5 +109,19 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildPageForStation(int stationNumber) {
+    switch (stationNumber) {
+      case 1:
+        return const Station1Page();
+      case 3:
+        return const Station3Page();
+      case 4:
+        // For Station 4 we can reuse Station 3 components pattern
+        return const Station3Page();
+      default:
+        return StationPage(stationNumber: stationNumber);
+    }
   }
 }
