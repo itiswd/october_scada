@@ -71,7 +71,7 @@ class _MainNavigationPageState extends ConsumerState<MainNavigationPage> {
               _buildNavItem(3, 'Station 4', isMobile),
               _buildNavItem(4, 'Station 5', isMobile),
               _buildNavItem(5, 'Station 6', isMobile),
-              _buildNavItem(5, 'Station 7', isMobile),
+              _buildNavItem(6, 'Station 7', isMobile),
             ],
           ),
         ),
