@@ -20,7 +20,6 @@ class PumpGroupWithTankStation3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = ResponsiveHelper.isMobile(context);
-    final isDesktop = ResponsiveHelper.isDesktop(context);
 
     final tankLevelKey = tankNumber == 1
         ? MqttTopics.tank1Level
@@ -40,13 +39,7 @@ class PumpGroupWithTankStation3 extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: pumpNumbers.map((n) {
         final running = service.pumpsStatus['pump${n}_is_runnung'] ?? false;
-        return PumpColumn(
-          startOn: false,
-          startOff: false,
-          pump: running,
-          endOn: false,
-          endOff: false,
-        );
+        return PumpElement(isMobile: isMobile, pump: running);
       }).toList(),
     );
 
@@ -54,13 +47,12 @@ class PumpGroupWithTankStation3 extends StatelessWidget {
       children: [
         pumpsRow,
         Container(
-          width: double.infinity,
           decoration: BoxDecoration(
             color: AppTheme.darkerBackground,
             borderRadius: BorderRadius.circular(24.r),
           ),
           padding: EdgeInsets.all(isMobile ? 12.r : 16.r),
-          child: isDesktop ? tankCard : tankCard,
+          child: tankCard,
         ),
       ],
     );

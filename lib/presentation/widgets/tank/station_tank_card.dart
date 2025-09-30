@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/theme/theme.dart';
 
@@ -42,7 +41,6 @@ class _StationTankCardState extends State<StationTankCard> {
   @override
   void didUpdateWidget(covariant StationTankCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // حفظ المستويات السابقة للمقارنة
     if (oldWidget.levels != widget.levels) {
       previousLevels = oldWidget.levels;
     }
@@ -55,17 +53,14 @@ class _StationTankCardState extends State<StationTankCard> {
   }
 
   void _startStatusTimer() {
-    _statusTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+    _statusTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (mounted) {
         _updateBarStatuses();
         final newOverallStatus = _calculateOverallStatus();
-
         setState(() {
           overallStatus = newOverallStatus;
+          previousLevels = List.from(widget.levels);
         });
-
-        // تحديث المستويات السابقة للمقارنة التالية
-        previousLevels = List.from(widget.levels);
       }
     });
   }
@@ -73,15 +68,15 @@ class _StationTankCardState extends State<StationTankCard> {
   void _updateBarStatuses() {
     for (int i = 0; i < widget.levels.length; i++) {
       if (i < previousLevels.length) {
-        final currentLevel = widget.levels[i];
-        final previousLevel = previousLevels[i];
+        final current = widget.levels[i];
+        final previous = previousLevels[i];
 
-        if (currentLevel > previousLevel) {
+        if (current > previous) {
           barStatuses[i] = "Filling";
-        } else if (currentLevel < previousLevel) {
+        } else if (current < previous) {
           barStatuses[i] = "Draining";
         } else {
-          barStatuses[i] = "Stable";
+          barStatuses[i] = "Stable"; // ✅ رجعنا حالة Stable واضحة
         }
       }
     }
@@ -95,7 +90,7 @@ class _StationTankCardState extends State<StationTankCard> {
 
     if (currentSum > previousSum) return "Filling";
     if (currentSum < previousSum) return "Draining";
-    return "Stable";
+    return "Stable"; // ✅ رجعنا Stable بدل ما يمسك الحالة القديمة
   }
 
   Color _getStatusColor(String status) {
@@ -105,7 +100,7 @@ class _StationTankCardState extends State<StationTankCard> {
       case "Draining":
         return Colors.red;
       default:
-        return Colors.grey;
+        return Colors.grey; // ✅ Stable
     }
   }
 
@@ -116,7 +111,7 @@ class _StationTankCardState extends State<StationTankCard> {
       case "Draining":
         return Icons.arrow_downward;
       default:
-        return Icons.pause;
+        return Icons.pause; // ✅ Stable
     }
   }
 
@@ -154,16 +149,13 @@ class _StationTankCardState extends State<StationTankCard> {
   ) {
     return Row(
       children: [
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          child: CircleAvatar(
-            radius: isMobile ? 12.r : 16.r,
-            backgroundColor: statusColor.withAlpha(25),
-            child: Icon(
-              statusIcon,
-              color: statusColor,
-              size: isMobile ? 12.sp : 16.sp,
-            ),
+        CircleAvatar(
+          radius: isMobile ? 12.r : 16.r,
+          backgroundColor: statusColor.withAlpha(25),
+          child: Icon(
+            statusIcon,
+            color: statusColor,
+            size: isMobile ? 12.sp : 16.sp,
           ),
         ),
         SizedBox(width: 8.w),
@@ -176,44 +168,27 @@ class _StationTankCardState extends State<StationTankCard> {
           ),
         ),
         const Spacer(),
-        AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: 500),
+        Text(
+          status,
           style: TextStyle(
             color: statusColor,
             fontSize: isMobile ? 16.sp : 20.sp,
             fontWeight: FontWeight.bold,
           ),
-          child: Text(status),
         ),
       ],
     );
   }
 
   Widget _buildMetrics(bool isMobile) {
-    if (isMobile) {
-      return Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _buildFlowWidget(isMobile),
-              _buildCapacityWidget(isMobile),
-            ],
-          ),
-          SizedBox(height: 16.h),
-          _buildLevelsGrid(isMobile),
-        ],
-      );
-    } else {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          _buildFlowWidget(isMobile),
-          _buildLevelsGrid(isMobile),
-          _buildCapacityWidget(isMobile),
-        ],
-      );
-    }
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _buildFlowWidget(isMobile),
+        _buildLevelsGrid(isMobile),
+        _buildCapacityWidget(isMobile),
+      ],
+    );
   }
 
   Widget _buildFlowWidget(bool isMobile) {
@@ -267,7 +242,7 @@ class _StationTankCardState extends State<StationTankCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildLevelItem("Lv1", widget.levels[0], isMobile),
-            SizedBox(width: isMobile ? 12.w : 20.w),
+            SizedBox(width: 20.w),
             _buildLevelItem("Lv2", widget.levels[1], isMobile),
           ],
         ),
@@ -276,7 +251,7 @@ class _StationTankCardState extends State<StationTankCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildLevelItem("Lv3", widget.levels[2], isMobile),
-            SizedBox(width: isMobile ? 12.w : 20.w),
+            SizedBox(width: 20.w),
             _buildLevelItem("Lv4", widget.levels[3], isMobile),
           ],
         ),
@@ -326,14 +301,6 @@ class _StationTankCardState extends State<StationTankCard> {
   }
 
   Widget _buildBars(bool isMobile) {
-    return Center(
-      child: isMobile
-          ? _buildMobileBars(isMobile)
-          : _buildDesktopBars(isMobile),
-    );
-  }
-
-  Widget _buildMobileBars(bool isMobile) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: widget.levels.asMap().entries.map((entry) {
@@ -343,25 +310,8 @@ class _StationTankCardState extends State<StationTankCard> {
             ? barStatuses[index]
             : "Stable";
         Color barColor = _getStatusColor(barStatus);
-        return _buildSingleBar(level, barColor, barStatus, isMobile, index);
-      }).toList(),
-    );
-  }
 
-  Widget _buildDesktopBars(bool isMobile) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: widget.levels.asMap().entries.map((entry) {
-        int index = entry.key;
-        double level = entry.value;
-        String barStatus = index < barStatuses.length
-            ? barStatuses[index]
-            : "Stable";
-        Color barColor = _getStatusColor(barStatus);
-        return Container(
-          margin: EdgeInsets.symmetric(horizontal: 24.w),
-          child: _buildSingleBar(level, barColor, barStatus, isMobile, index),
-        );
+        return _buildSingleBar(level, barColor, barStatus, isMobile);
       }).toList(),
     );
   }
@@ -371,41 +321,34 @@ class _StationTankCardState extends State<StationTankCard> {
     Color barColor,
     String barStatus,
     bool isMobile,
-    int index,
   ) {
-    final percent = (level / widget.capacity) * 100;
-    final barWidth = isMobile ? 68.w : 180.w;
+    final percent = (level / widget.capacity).clamp(0.0, 1.0) * 100;
+    final barWidth = isMobile ? 68.w : 140.w;
     final barHeight = isMobile ? 160.h : 320.h;
-    final fillHeight = (level / widget.capacity) * (isMobile ? 160.h : 320.h);
+    final fillHeight = (level / widget.capacity).clamp(0.0, 1.0) * barHeight;
 
     return Column(
       children: [
-        // Status indicator لكل bar
-        Container(
-          width: barWidth,
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                _getStatusIcon(barStatus),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              _getStatusIcon(barStatus),
+              color: barColor,
+              size: isMobile ? 12.sp : 16.sp,
+            ),
+            SizedBox(width: 4.w),
+            Text(
+              barStatus,
+              style: TextStyle(
                 color: barColor,
-                size: isMobile ? 12.sp : 16.sp,
+                fontSize: isMobile ? 10.sp : 12.sp,
+                fontWeight: FontWeight.bold,
               ),
-              SizedBox(width: 2.w),
-              Text(
-                barStatus,
-                style: TextStyle(
-                  color: barColor,
-                  fontSize: isMobile ? 8.sp : 12.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
         SizedBox(height: 4.h),
-        // البار نفسه
         Container(
           width: barWidth,
           height: barHeight,
@@ -424,7 +367,6 @@ class _StationTankCardState extends State<StationTankCard> {
                   height: fillHeight,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: barColor,
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
@@ -440,7 +382,7 @@ class _StationTankCardState extends State<StationTankCard> {
                   child: Text(
                     "${percent.toStringAsFixed(1)}%",
                     style: TextStyle(
-                      color: level == widget.capacity
+                      color: level >= widget.capacity
                           ? Colors.white
                           : Colors.white70,
                       fontWeight: FontWeight.w600,

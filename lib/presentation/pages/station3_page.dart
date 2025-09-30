@@ -116,7 +116,7 @@ class Station3Page extends ConsumerWidget {
           ),
         ),
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               flex: 3,
@@ -141,12 +141,12 @@ class Station3Page extends ConsumerWidget {
             ),
 
             SizedBox(width: 8.w),
-
             // Power + Weather + Pumps Data and Status
             Expanded(
               flex: 2,
               child: Column(
                 children: [
+                  SizedBox(height: 24.h),
                   PowerSourcesStation3(
                     supply1: service.powerSources[MqttTopics.supply1] ?? false,
                     supply2: service.powerSources[MqttTopics.supply2] ?? false,
@@ -170,7 +170,7 @@ class Station3Page extends ConsumerWidget {
                   PumpGroupWithTankStation3(
                     service: service,
                     pumpNumbers: const [4, 5, 6],
-                    tankNumber: 1,
+                    tankNumber: 2,
                   ),
                   SizedBox(height: 8.h),
                   GaugesSection(

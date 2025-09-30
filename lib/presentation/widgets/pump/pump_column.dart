@@ -33,7 +33,7 @@ class PumpColumn extends StatelessWidget {
           right: isMobile ? 6.5 : 8,
           isMobile: isMobile,
         ),
-        _buildPump(isMobile),
+        PumpElement(isMobile: isMobile, pump: pump),
         _buildValve(
           endOn,
           endOff,
@@ -69,8 +69,15 @@ class PumpColumn extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildPump(bool isMobile) {
+class PumpElement extends StatelessWidget {
+  final bool isMobile;
+  final bool pump;
+  const PumpElement({super.key, required this.pump, required this.isMobile});
+
+  @override
+  Widget build(BuildContext context) {
     return Image.asset(
       pump ? AppConstants.pumpOnImage : AppConstants.pumpOffImage,
       width: isMobile ? 54.w : 120.w,
