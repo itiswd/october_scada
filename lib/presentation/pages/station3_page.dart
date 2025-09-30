@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:october_scada/core/core.dart';
 import 'package:october_scada/domain/domain.dart';
+import 'package:october_scada/presentation/widgets/station3/pump_group_station3.dart';
+import 'package:october_scada/presentation/widgets/station3/pumps_status_table_station3.dart';
 import 'package:october_scada/presentation/widgets/widgets.dart';
 
 class Station3Page extends ConsumerWidget {
@@ -24,10 +26,17 @@ class Station3Page extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Connection Status
                 if (!isConnected) const ConnectionStatusIndicator(),
 
-                // Main Content
+                // Wave Tank header like Station 1
+                Center(
+                  child: WaveTank(
+                    height: isMobile ? 40.h : 56.h,
+                    waveAmplitude: isMobile ? 4.0 : 6.0,
+                    waveSpeed: 1.0,
+                  ),
+                ),
+
                 if (isMobile) ...[
                   _buildMobileLayout(service),
                 ] else ...[
@@ -44,15 +53,19 @@ class Station3Page extends ConsumerWidget {
   Widget _buildMobileLayout(dynamic service) {
     return Column(
       children: [
-        // Pumps Section
-        _buildPumpsGrid(service, true),
-        SizedBox(height: 16.h),
-
-        // Tanks
-        _buildTank1(service, true),
-        SizedBox(height: 8.h),
-        _buildTank2(service, true),
-        SizedBox(height: 16.h),
+        // Pumps grouped 3 per tank
+        PumpGroupWithTankStation3(
+          service: service,
+          pumpNumbers: const [1, 2, 3],
+          tankNumber: 1,
+        ),
+        SizedBox(height: 12.h),
+        PumpGroupWithTankStation3(
+          service: service,
+          pumpNumbers: const [4, 5, 6],
+          tankNumber: 2,
+        ),
+        SizedBox(height: 12.h),
 
         // Power Sources
         PowerSourcesStation3(
@@ -67,6 +80,9 @@ class Station3Page extends ConsumerWidget {
           sensor1: service.pressureSensors[MqttTopics.pressureSensor1] ?? 0,
           sensor2: service.pressureSensors[MqttTopics.pressureSensor2] ?? 0,
         ),
+        SizedBox(height: 12.h),
+        // Pumps detailed table
+        PumpsStatusTableStation3(service: service),
       ],
     );
   }
@@ -80,11 +96,17 @@ class Station3Page extends ConsumerWidget {
           flex: 5,
           child: Column(
             children: [
-              _buildPumpsGrid(service, false),
+              PumpGroupWithTankStation3(
+                service: service,
+                pumpNumbers: const [1, 2, 3],
+                tankNumber: 1,
+              ),
               SizedBox(height: 16.h),
-              _buildTank1(service, false),
-              SizedBox(height: 8.h),
-              _buildTank2(service, false),
+              PumpGroupWithTankStation3(
+                service: service,
+                pumpNumbers: const [4, 5, 6],
+                tankNumber: 2,
+              ),
             ],
           ),
         ),
@@ -108,49 +130,12 @@ class Station3Page extends ConsumerWidget {
                 sensor2:
                     service.pressureSensors[MqttTopics.pressureSensor2] ?? 0,
               ),
+              SizedBox(height: 16.h),
+              PumpsStatusTableStation3(service: service),
             ],
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildPumpsGrid(dynamic service, bool isMobile) {
-    return Wrap(
-      spacing: isMobile ? 8.w : 16.w,
-      runSpacing: isMobile ? 8.h : 16.h,
-      children: List.generate(6, (index) {
-        final pumpNum = index + 1;
-        return PumpCardStation3(
-          pumpNumber: pumpNum,
-          isRunning: service.pumpsStatus['pump${pumpNum}_is_runnung'] ?? false,
-          isAuto: service.pumpsStatus['pump${pumpNum}_is_auto'] ?? false,
-          isRemote: service.pumpsStatus['pump${pumpNum}_is_remote'] ?? false,
-          hours: service.pumpsTime['pump${pumpNum}_hour'] ?? 0,
-          minutes: service.pumpsTime['pump${pumpNum}_minute'] ?? 0,
-          seconds: service.pumpsTime['pump${pumpNum}_second'] ?? 0,
-        );
-      }),
-    );
-  }
-
-  Widget _buildTank1(dynamic service, bool isMobile) {
-    final level = service.tankData[MqttTopics.tank1Level] ?? 0.0;
-    return StationTankCard3(
-      title: "Tank 1",
-      flow: service.tankData[MqttTopics.tank1Flow] ?? 0.0,
-      capacity: AppConstants.tankCapacity,
-      levels: [level],
-    );
-  }
-
-  Widget _buildTank2(dynamic service, bool isMobile) {
-    final level = service.tankData[MqttTopics.tank2Level] ?? 0.0;
-    return StationTankCard3(
-      title: "Tank 2",
-      flow: service.tankData[MqttTopics.tank2Flow] ?? 0.0,
-      capacity: AppConstants.tankCapacity,
-      levels: [level],
     );
   }
 }
