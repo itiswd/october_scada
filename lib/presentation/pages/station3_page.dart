@@ -169,7 +169,7 @@ class Station3Page extends ConsumerWidget {
                   //Tank 2
                   PumpGroupWithTankStation3(
                     service: service,
-                    pumpNumbers: const [1, 2, 3],
+                    pumpNumbers: const [4, 5, 6],
                     tankNumber: 1,
                   ),
                   SizedBox(height: 8.h),
