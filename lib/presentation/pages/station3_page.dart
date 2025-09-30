@@ -131,8 +131,7 @@ class Station3Page extends ConsumerWidget {
                 sensor2:
                     service.pressureSensors[MqttTopics.pressureSensor2] ?? 0,
               ),
-              SizedBox(height: 16.h),
-              PumpsStatusTableStation3(service: service),
+              // Removed global pumps table; details shown in per-pump dialog
             ],
           ),
         ),
